@@ -1,18 +1,26 @@
-# 7ICONS Web
+<p align="center">
+  <img src="assets/7icons-web-banner.png" alt="7ICONS Web Banner" width="100%">
+</p>
 
-> **Official public website for 7ICONS & ICONIA.**
+<h1 align="center">7ICONS Web</h1>
 
-**Every Voice. One Iconic Story.**
+<p align="center">
+  <strong>Official Public Website for 7ICONS &amp; ICONIA</strong>
+</p>
 
-`7icons-web` is the public-facing website of the 7ICONS digital platform — a place for stories, articles, member information, fan representatives, archives, and the ICONIA community.
+<p align="center">
+  <em>Every Voice. One Iconic Story.</em>
+</p>
 
 ---
 
 ## 💜 About
 
-The 7ICONS website is designed as a combination of a **blog, digital archive, and community platform** dedicated to 7ICONS and ICONIA.
+**7ICONS Web** is the public-facing website of the 7ICONS digital platform — a place for stories, articles, member information, fan representatives, archives, and the ICONIA community.
 
-The public website will provide visitors with access to articles, member profiles, community information, fan representatives across Indonesia, and interactive community features.
+The website is designed as a combination of a **blog, digital archive, and community platform** dedicated to **7ICONS & ICONIA**.
+
+Visitors will be able to explore articles, discover member profiles, find fan representatives across Indonesia, access archived content, and interact with the community.
 
 ---
 
@@ -34,18 +42,20 @@ The public website will provide visitors with access to articles, member profile
 * Categories
 * Search
 * Individual article pages
+* Related articles
 
 ### 👩 Members
 
 * Member profiles
 * Member information
-* Related stories and content
+* Stories and related content
 
 ### 🇮🇩 Fan Representatives
 
 * Fan representatives across Indonesia
 * Regional information
 * Representative profiles
+* Community connections
 
 ### 👤 User Accounts
 
@@ -69,6 +79,7 @@ The public website will provide visitors with access to articles, member profile
 * Stories
 * Articles
 * Community memories
+* Past moments surrounding 7ICONS & ICONIA
 
 ---
 
@@ -91,6 +102,9 @@ Additional technologies will be introduced as the project develops.
 
 ```text
 7icons-web/
+├── assets/
+│   └── 7icons-web-banner.png
+│
 ├── public/
 │
 ├── src/
@@ -100,17 +114,19 @@ Additional technologies will be introduced as the project develops.
 │       ├── layout.tsx
 │       └── page.tsx
 │
+├── .gitignore
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── eslint.config.mjs
 ├── next.config.ts
 ├── package.json
+├── package-lock.json
 ├── postcss.config.mjs
-├── tsconfig.json
-└── README.md
+├── README.md
+└── tsconfig.json
 ```
 
-The structure will continue to evolve as new pages, components, and features are introduced.
+The project structure will continue to evolve as new pages, components, services, and features are introduced.
 
 ---
 
@@ -118,7 +134,7 @@ The structure will continue to evolve as new pages, components, and features are
 
 ### Requirements
 
-Make sure **Node.js** and **npm** are installed.
+Make sure **Node.js** and **npm** are installed on your system.
 
 Install the project dependencies:
 
@@ -142,29 +158,37 @@ http://localhost:3000
 
 ## 📜 Available Scripts
 
-Start the development server:
+### Development
 
 ```bash
 npm run dev
 ```
 
-Create a production build:
+Starts the local development server.
+
+### Production Build
 
 ```bash
 npm run build
 ```
 
-Start the production server:
+Creates an optimized production build.
+
+### Production Server
 
 ```bash
 npm run start
 ```
 
-Run ESLint:
+Starts the production server after a successful build.
+
+### Lint
 
 ```bash
 npm run lint
 ```
+
+Runs ESLint to check the project source code.
 
 ---
 
@@ -172,35 +196,51 @@ npm run lint
 
 **Currently in active development.**
 
-Development is being completed gradually, with each section finalized before moving on to the next major part of the website.
+Development is being completed gradually, with each section reviewed and finalized before moving on to the next major part of the website.
 
 ### Current Progress
 
-* [x] Repository setup
+* [x] GitHub repository setup
 * [x] Next.js initialization
 * [x] TypeScript setup
 * [x] Tailwind CSS setup
 * [x] React Compiler setup
-* [x] Initial project cleanup
+* [x] App Router setup
+* [x] Initial Next.js template cleanup
+* [x] Project metadata
+* [x] Repository README
 * [ ] Homepage
 * [ ] Blog
 * [ ] Article pages
 * [ ] Members
 * [ ] Fan Representatives
+* [ ] Archive
 * [ ] User authentication
 * [ ] User profiles
+* [ ] Profile picture management
 * [ ] Comments
-* [ ] Archive
 * [ ] Backend integration
 * [ ] Deployment
 
 ---
 
-## 🤝 Related Project
+## 🌐 7ICONS Digital Ecosystem
 
-The public website is part of the broader **7ICONS digital ecosystem**.
+`7icons-web` is the public-facing application within the broader **7ICONS digital ecosystem**.
 
-Administration, content management, user management, and moderation tools will be handled separately from this public-facing application.
+The public website is responsible for the experience available to visitors and registered community members.
+
+Administration, content management, user management, comment moderation, and other internal tools will be handled separately through the administration platform.
+
+---
+
+## 💜 Built for ICONIA
+
+This project is more than a website.
+
+It is a digital space where **ICONIA can discover, share, remember, and connect** through stories surrounding 7ICONS.
+
+From **Sabang to Merauke**, every voice and every community has a story worth remembering.
 
 ---
 
