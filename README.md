@@ -1,36 +1,213 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 7ICONS Web
 
-## Getting Started
+> **Official public website for 7ICONS & ICONIA.**
 
-First, run the development server:
+**Every Voice. One Iconic Story.**
+
+`7icons-web` is the public-facing website of the 7ICONS digital platform — a place for stories, articles, member information, fan representatives, archives, and the ICONIA community.
+
+---
+
+## 💜 About
+
+The 7ICONS website is designed as a combination of a **blog, digital archive, and community platform** dedicated to 7ICONS and ICONIA.
+
+The public website will provide visitors with access to articles, member profiles, community information, fan representatives across Indonesia, and interactive community features.
+
+---
+
+## ✨ Planned Features
+
+### 🏠 Home
+
+* Featured content
+* Latest articles
+* News and updates
+* Member highlights
+* Fan representative highlights
+* Community information
+
+### 📰 Blog & Articles
+
+* Article listing
+* Featured articles
+* Categories
+* Search
+* Individual article pages
+
+### 👩 Members
+
+* Member profiles
+* Member information
+* Related stories and content
+
+### 🇮🇩 Fan Representatives
+
+* Fan representatives across Indonesia
+* Regional information
+* Representative profiles
+
+### 👤 User Accounts
+
+* Registration
+* Login
+* User profiles
+* Custom profile pictures
+* Account settings
+* Comment history
+
+### 💬 Community
+
+* Article comments
+* Community interaction
+* User activity
+* Moderated discussions
+
+### 🗂️ Archive
+
+* Historical content
+* Stories
+* Articles
+* Community memories
+
+---
+
+## 🛠️ Tech Stack
+
+The project currently uses:
+
+* **Next.js**
+* **React**
+* **TypeScript**
+* **Tailwind CSS**
+* **App Router**
+* **React Compiler**
+
+Additional technologies will be introduced as the project develops.
+
+---
+
+## 📁 Project Structure
+
+```text
+7icons-web/
+├── public/
+│
+├── src/
+│   └── app/
+│       ├── favicon.ico
+│       ├── globals.css
+│       ├── layout.tsx
+│       └── page.tsx
+│
+├── AGENTS.md
+├── CLAUDE.md
+├── eslint.config.mjs
+├── next.config.ts
+├── package.json
+├── postcss.config.mjs
+├── tsconfig.json
+└── README.md
+```
+
+The structure will continue to evolve as new pages, components, and features are introduced.
+
+---
+
+## 🚀 Getting Started
+
+### Requirements
+
+Make sure **Node.js** and **npm** are installed.
+
+Install the project dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📜 Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+Start the development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create a production build:
 
-## Deploy on Vercel
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Start the production server:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run start
+```
+
+Run ESLint:
+
+```bash
+npm run lint
+```
+
+---
+
+## 🚧 Project Status
+
+**Currently in active development.**
+
+Development is being completed gradually, with each section finalized before moving on to the next major part of the website.
+
+### Current Progress
+
+* [x] Repository setup
+* [x] Next.js initialization
+* [x] TypeScript setup
+* [x] Tailwind CSS setup
+* [x] React Compiler setup
+* [x] Initial project cleanup
+* [ ] Homepage
+* [ ] Blog
+* [ ] Article pages
+* [ ] Members
+* [ ] Fan Representatives
+* [ ] User authentication
+* [ ] User profiles
+* [ ] Comments
+* [ ] Archive
+* [ ] Backend integration
+* [ ] Deployment
+
+---
+
+## 🤝 Related Project
+
+The public website is part of the broader **7ICONS digital ecosystem**.
+
+Administration, content management, user management, and moderation tools will be handled separately from this public-facing application.
+
+---
+
+<div align="center">
+
+### Every Voice. One Iconic Story.
+
+**BUILT FOR ICONIA, BY ICONIA.**
+
+</div>
