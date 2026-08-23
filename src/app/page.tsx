@@ -1,3 +1,4 @@
+import Hero from "@/components/home/Hero";
 import Navbar from "@/components/layout/Navbar";
 
 export default function Home() {
@@ -5,7 +6,9 @@ export default function Home() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-white" />
+      <main>
+        <Hero />
+      </main>
     </>
   );
 }
