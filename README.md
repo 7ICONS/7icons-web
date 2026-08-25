@@ -12,6 +12,26 @@
   <em>Every Voice. One Iconic Story.</em>
 </p>
 
+<p align="center">
+  <a href="https://7icons-web.vercel.app">
+    <strong>🌐 View Live Demo</strong>
+  </a>
+</p>
+
+---
+
+## 🌐 Live Demo
+
+The **7ICONS Web Homepage V1** is now live and available publicly.
+
+### 🔗 Production
+
+**https://7icons-web.vercel.app**
+
+The live demo currently showcases the completed responsive Homepage V1 across desktop, tablet, and mobile devices.
+
+> Some navigation links and interactive features are still under development and may not be available yet.
+
 ---
 
 ## 💜 About
@@ -20,7 +40,27 @@
 
 The website is designed as a combination of a **blog, digital archive, and community platform** dedicated to **7ICONS & ICONIA**.
 
-Visitors will be able to explore articles, discover member profiles, find fan representatives across Indonesia, access archived content, and interact with the community.
+Visitors will eventually be able to explore articles, discover member profiles, find fan representatives across Indonesia, access archived content, create accounts, and interact with the community.
+
+---
+
+## 🏠 Homepage V1
+
+The first version of the homepage has been completed and deployed.
+
+### Included Sections
+
+* ✅ Responsive Navbar
+* ✅ Hero Section
+* ✅ Featured Articles
+* ✅ Meet the Members
+* ✅ ICONIA Across Indonesia
+* ✅ Responsive Footer
+* ✅ Desktop layout
+* ✅ Tablet layout
+* ✅ Mobile layout
+* ✅ Production build
+* ✅ Vercel deployment
 
 ---
 
@@ -93,6 +133,7 @@ The project currently uses:
 * **Tailwind CSS**
 * **App Router**
 * **React Compiler**
+* **Vercel**
 
 Additional technologies will be introduced as the project develops.
 
@@ -106,13 +147,45 @@ Additional technologies will be introduced as the project develops.
 │   └── 7icons-web-banner.png
 │
 ├── public/
+│   ├── brand/
+│   │   └── 7icons-logo-v2.png
+│   │
+│   ├── community/
+│   │   └── indonesia-map.png
+│   │
+│   ├── featured/
+│   │   ├── featured-journey.png
+│   │   ├── featured-practice-day.png
+│   │   └── featured-seven-voices.png
+│   │
+│   ├── hero/
+│   │   └── 7icons-hero-desktop.png
+│   │
+│   └── members/
+│       ├── member-01.png
+│       ├── member-02.png
+│       ├── member-03.png
+│       ├── member-04.png
+│       ├── member-05.png
+│       └── member-06.png
 │
 ├── src/
-│   └── app/
-│       ├── favicon.ico
-│       ├── globals.css
-│       ├── layout.tsx
-│       └── page.tsx
+│   ├── app/
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   │
+│   └── components/
+│       ├── home/
+│       │   ├── FeaturedArticles.tsx
+│       │   ├── Hero.tsx
+│       │   ├── IconiaAcrossIndonesia.tsx
+│       │   └── MeetMembers.tsx
+│       │
+│       └── layout/
+│           ├── Footer.tsx
+│           └── Navbar.tsx
 │
 ├── .gitignore
 ├── AGENTS.md
@@ -136,7 +209,7 @@ The project structure will continue to evolve as new pages, components, services
 
 Make sure **Node.js** and **npm** are installed on your system.
 
-Install the project dependencies:
+Clone the repository and install the dependencies:
 
 ```bash
 npm install
@@ -192,13 +265,43 @@ Runs ESLint to check the project source code.
 
 ---
 
+## 🚀 Deployment
+
+The project is deployed using **Vercel**.
+
+Production deployment:
+
+```text
+https://7icons-web.vercel.app
+```
+
+The production project is connected directly to the GitHub repository.
+
+Current deployment workflow:
+
+```text
+Local Development
+        ↓
+Test & Production Build
+        ↓
+Git Commit
+        ↓
+Push to main
+        ↓
+Vercel Automatic Build
+        ↓
+Production Deployment
+```
+
+Updates pushed to the `main` branch can automatically trigger a new production deployment.
+
+---
+
 ## 🚧 Project Status
 
 **Currently in active development.**
 
-Development is being completed gradually, with each section reviewed and finalized before moving on to the next major part of the website.
-
-### Current Progress
+### Homepage V1
 
 * [x] GitHub repository setup
 * [x] Next.js initialization
@@ -207,20 +310,33 @@ Development is being completed gradually, with each section reviewed and finaliz
 * [x] React Compiler setup
 * [x] App Router setup
 * [x] Initial Next.js template cleanup
-* [x] Project metadata
 * [x] Repository README
-* [ ] Homepage
-* [ ] Blog
-* [ ] Article pages
-* [ ] Members
-* [ ] Fan Representatives
+* [x] Responsive Navbar
+* [x] Responsive Hero Section
+* [x] Featured Articles
+* [x] Meet the Members
+* [x] ICONIA Across Indonesia
+* [x] Responsive Footer
+* [x] Production build
+* [x] Vercel live deployment
+
+### Next Development
+
+* [ ] Blog page
+* [ ] Article detail pages
+* [ ] Members page
+* [ ] Member detail pages
+* [ ] Fan Representatives page
+* [ ] Representative profiles
 * [ ] Archive
+* [ ] Search
 * [ ] User authentication
 * [ ] User profiles
 * [ ] Profile picture management
 * [ ] Comments
+* [ ] Comment history
 * [ ] Backend integration
-* [ ] Deployment
+* [ ] Admin integration
 
 ---
 
@@ -249,5 +365,9 @@ From **Sabang to Merauke**, every voice and every community has a story worth re
 ### Every Voice. One Iconic Story.
 
 **BUILT FOR ICONIA, BY ICONIA.**
+
+<br />
+
+🌐 **Live Demo:** https://7icons-web.vercel.app
 
 </div>
