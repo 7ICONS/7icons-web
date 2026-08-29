@@ -4,6 +4,7 @@ import IconiaAcrossIndonesia from "@/components/home/IconiaAcrossIndonesia";
 import MeetMembers from "@/components/home/MeetMembers";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import UpcomingSchedule from "@/components/home/UpcomingSchedule";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <Hero />
         <FeaturedArticles />
         <MeetMembers />
+        <UpcomingSchedule />
         <IconiaAcrossIndonesia />
       </main>
 
