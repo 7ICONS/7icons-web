@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { scheduleEvents } from "@/data/schedule";
 
@@ -332,15 +333,16 @@ export default function UpcomingSchedule() {
             </div>
 
             {/* Future Full Schedule Button */}
-            <div className="mt-6">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-violet-700 transition hover:text-violet-900"
-              >
-                View Full Schedule
-                <span aria-hidden="true">→</span>
-              </button>
-            </div>
+            {/* Full Schedule Link */}
+<div className="mt-6">
+  <Link
+    href="/schedule"
+    className="inline-flex items-center gap-2 text-sm font-semibold text-violet-700 transition hover:text-violet-900"
+  >
+    View Full Schedule
+    <span aria-hidden="true">→</span>
+  </Link>
+</div>
           </div>
         </div>
       </div>
