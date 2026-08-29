@@ -53,7 +53,7 @@ export default function Navbar() {
             src="/brand/7icons-logo-v2.png"
             alt="7ICONS"
             width={240}
-            height={64}
+            height={80}
             priority
             className="h-14 w-auto scale-110 object-contain"
           />
@@ -86,8 +86,9 @@ export default function Navbar() {
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-5 lg:flex">
-          <button
-            type="button"
+          {/* Search */}
+          <Link
+            href="/search"
             aria-label="Search"
             className="flex h-10 w-10 items-center justify-center rounded-full text-slate-800 transition hover:bg-violet-50 hover:text-violet-600"
           >
@@ -101,23 +102,23 @@ export default function Navbar() {
               <circle cx="11" cy="11" r="7" />
               <path d="m20 20-4-4" />
             </svg>
-          </button>
+          </Link>
 
           <div className="h-7 w-px bg-gray-200" />
 
           <Link
-  href="/login"
-  className="text-sm font-medium text-slate-900 transition hover:text-violet-700"
->
-  Login
-</Link>
+            href="/login"
+            className="text-sm font-medium text-slate-900 transition hover:text-violet-700"
+          >
+            Login
+          </Link>
 
-<Link
-  href="/signup"
-  className="rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/15 transition hover:-translate-y-0.5 hover:shadow-xl"
->
-  Sign Up
-</Link>
+          <Link
+            href="/signup"
+            className="rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/15 transition hover:-translate-y-0.5 hover:shadow-xl"
+          >
+            Sign Up
+          </Link>
         </div>
 
         {/* Mobile Button */}
@@ -132,7 +133,7 @@ export default function Navbar() {
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="h-7 w-7"
+              className="h-6 w-6"
               stroke="currentColor"
               strokeWidth="1.7"
             >
@@ -143,7 +144,7 @@ export default function Navbar() {
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="h-7 w-7"
+              className="h-6 w-6"
               stroke="currentColor"
               strokeWidth="1.7"
             >
@@ -178,22 +179,43 @@ export default function Navbar() {
               );
             })}
 
-            <div className="mt-5 grid grid-cols-2 gap-3">
-             <div className="mt-5 grid grid-cols-2 gap-3">
-  <Link
-    href="/login"
-    className="flex items-center justify-center rounded-xl border border-violet-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-700"
-  >
-    Login
-  </Link>
+            {/* Mobile Search */}
+            <Link
+              href="/search"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-4 flex items-center gap-3 rounded-xl border border-violet-100 px-4 py-3 text-base font-medium text-slate-800 transition hover:bg-violet-50 hover:text-violet-600"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                className="h-5 w-5"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-4-4" />
+              </svg>
 
-  <Link
-    href="/signup"
-    className="flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-violet-500/15"
-  >
-    Sign Up
-  </Link>
-</div>
+              Search
+            </Link>
+
+            {/* Mobile Account Buttons */}
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center rounded-xl border border-violet-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-700"
+              >
+                Login
+              </Link>
+
+              <Link
+                href="/signup"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-violet-500/15"
+              >
+                Sign Up
+              </Link>
             </div>
           </div>
         </div>
