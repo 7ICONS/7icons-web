@@ -106,18 +106,18 @@ export default function Navbar() {
           <div className="h-7 w-px bg-gray-200" />
 
           <Link
-            href="/login"
-            className="text-sm font-medium text-slate-800 transition hover:text-violet-600"
-          >
-            Login
-          </Link>
+  href="/login"
+  className="text-sm font-medium text-slate-900 transition hover:text-violet-700"
+>
+  Login
+</Link>
 
-          <Link
-            href="/register"
-            className="rounded-xl bg-gradient-to-r from-violet-600 to-purple-500 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            Sign Up
-          </Link>
+<Link
+  href="/signup"
+  className="rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/15 transition hover:-translate-y-0.5 hover:shadow-xl"
+>
+  Sign Up
+</Link>
         </div>
 
         {/* Mobile Button */}
@@ -179,21 +179,21 @@ export default function Navbar() {
             })}
 
             <div className="mt-5 grid grid-cols-2 gap-3">
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-xl border border-violet-500 px-5 py-3 text-center text-sm font-semibold text-violet-600 transition hover:bg-violet-50"
-              >
-                Login
-              </Link>
+             <div className="mt-5 grid grid-cols-2 gap-3">
+  <Link
+    href="/login"
+    className="flex items-center justify-center rounded-xl border border-violet-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-700"
+  >
+    Login
+  </Link>
 
-              <Link
-                href="/register"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-xl bg-gradient-to-r from-violet-600 to-purple-500 px-5 py-3 text-center text-sm font-semibold text-white"
-              >
-                Sign Up
-              </Link>
+  <Link
+    href="/signup"
+    className="flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-violet-500/15"
+  >
+    Sign Up
+  </Link>
+</div>
             </div>
           </div>
         </div>
