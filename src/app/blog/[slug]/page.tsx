@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import ArticleDetail from "@/components/blog/ArticleDetail";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import { blogArticles } from "@/data/blogArticles";
+import { getPublishedArticleBySlug } from "@/lib/articles";
 
 type ArticlePageProps = {
   params: Promise<{
@@ -12,22 +12,14 @@ type ArticlePageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return blogArticles
-    .filter((article) => article.content)
-    .map((article) => ({
-      slug: article.slug,
-    }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const article = blogArticles.find(
-    (item) => item.slug === slug && item.content,
-  );
+  const article = await getPublishedArticleBySlug(slug);
 
   if (!article) {
     return {
@@ -46,9 +38,7 @@ export default async function ArticlePage({
 }: ArticlePageProps) {
   const { slug } = await params;
 
-  const article = blogArticles.find(
-    (item) => item.slug === slug && item.content,
-  );
+  const article = await getPublishedArticleBySlug(slug);
 
   if (!article) {
     notFound();

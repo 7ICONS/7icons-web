@@ -4,10 +4,20 @@ import { useState } from "react";
 
 import ArticleGrid from "@/components/blog/ArticleGrid";
 import BlogHero from "@/components/blog/BlogHero";
+import type { Article } from "@/lib/articles";
 
-export default function BlogContent() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+type BlogContentProps = {
+  articles: Article[];
+};
+
+export default function BlogContent({
+  articles,
+}: BlogContentProps) {
+  const [searchQuery, setSearchQuery] =
+    useState("");
+
+  const [activeCategory, setActiveCategory] =
+    useState("All");
 
   return (
     <>
@@ -19,6 +29,7 @@ export default function BlogContent() {
       />
 
       <ArticleGrid
+        articles={articles}
         searchQuery={searchQuery}
         activeCategory={activeCategory}
       />

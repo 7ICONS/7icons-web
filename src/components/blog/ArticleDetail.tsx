@@ -1,21 +1,53 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import type { BlogArticle } from "@/data/blogArticles";
+import type { Article } from "@/lib/articles";
 
 type ArticleDetailProps = {
-  article: BlogArticle;
+  article: Article;
 };
+
+function formatArticleDate(
+  publishedAt: string | null,
+  createdAt: string,
+) {
+  const date = new Date(
+    publishedAt ?? createdAt,
+  );
+
+  return new Intl.DateTimeFormat(
+    "en-US",
+    {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    },
+  ).format(date);
+}
 
 export default function ArticleDetail({
   article,
 }: ArticleDetailProps) {
+  const articleDate = formatArticleDate(
+    article.published_at,
+    article.created_at,
+  );
+
+  const contentSource =
+    article.content.trim() ||
+    article.excerpt.trim();
+
+  const contentBlocks = contentSource
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
   return (
     <article className="bg-white">
       {/* Article Header */}
       <header className="relative overflow-hidden border-b border-violet-100 bg-gradient-to-b from-[#f3edff] via-[#faf8ff] to-white">
-        {/* Decorative glow */}
+        {/* Glow */}
         <div className="absolute -left-32 top-0 h-80 w-80 rounded-full bg-violet-300/20 blur-3xl" />
+
         <div className="absolute -right-24 top-10 h-96 w-96 rounded-full bg-purple-300/20 blur-3xl" />
 
         <div className="relative mx-auto max-w-[1000px] px-5 py-14 sm:px-8 md:py-20 lg:px-10">
@@ -35,8 +67,14 @@ export default function ArticleDetail({
             </span>
 
             <span className="text-xs font-medium uppercase tracking-[0.12em] text-slate-400">
-              {article.date}
+              {articleDate}
             </span>
+
+            {article.featured && (
+              <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-amber-700">
+                Featured
+              </span>
+            )}
           </div>
 
           {/* Title */}
@@ -53,41 +91,65 @@ export default function ArticleDetail({
 
       {/* Cover */}
       <div className="mx-auto max-w-[1200px] px-5 pt-10 sm:px-8 md:pt-14 lg:px-10">
-        <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-violet-50 shadow-sm md:rounded-3xl">
-          <Image
-            src={article.image}
-            alt={article.title}
-            fill
-            priority
-            sizes="(max-width: 1200px) 100vw, 1200px"
-            className="object-cover"
+        {article.cover_image ? (
+          <div
+            role="img"
+            aria-label={article.title}
+            className="aspect-[16/9] overflow-hidden rounded-2xl border border-violet-50 bg-slate-100 bg-cover bg-center shadow-sm md:rounded-3xl"
+            style={{
+              backgroundImage: `url("${article.cover_image}")`,
+            }}
           />
-        </div>
+        ) : (
+          <div className="flex aspect-[16/9] items-center justify-center overflow-hidden rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-100 via-purple-50 to-white md:rounded-3xl">
+            <div className="text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/70 text-violet-400 shadow-sm">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  className="h-8 w-8"
+                >
+                  <rect
+                    x="3"
+                    y="4"
+                    width="18"
+                    height="16"
+                    rx="2"
+                  />
+
+                  <circle
+                    cx="9"
+                    cy="9"
+                    r="2"
+                  />
+
+                  <path d="m4 18 5-5 3 3 2-2 6 6" />
+                </svg>
+              </div>
+
+              <p className="mt-3 text-sm font-medium text-violet-400">
+                7ICONS Digital Home
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Article Body */}
       <div className="mx-auto max-w-[820px] px-5 py-12 sm:px-8 md:py-16 lg:px-10">
-        <div className="space-y-10">
-          {article.content?.map((section, sectionIndex) => (
-            <section key={sectionIndex}>
-              {section.heading && (
-                <h2 className="mb-4 text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
-                  {section.heading}
-                </h2>
-              )}
-
-              <div className="space-y-5">
-                {section.paragraphs.map((paragraph, paragraphIndex) => (
-                  <p
-                    key={paragraphIndex}
-                    className="text-base leading-8 text-slate-700"
-                  >
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            </section>
-          ))}
+        <div className="space-y-6">
+          {contentBlocks.map(
+            (paragraph, index) => (
+              <p
+                key={`${article.id}-${index}`}
+                className="whitespace-pre-line text-base leading-8 text-slate-700"
+              >
+                {paragraph}
+              </p>
+            ),
+          )}
         </div>
 
         {/* Divider */}
@@ -100,12 +162,14 @@ export default function ArticleDetail({
           </p>
 
           <h3 className="mt-3 text-2xl font-semibold text-slate-950">
-            Discover more stories from 7ICONS &amp; ICONIA.
+            Discover more stories from 7ICONS
+            &amp; ICONIA.
           </h3>
 
-          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600">
-            Return to the Blog &amp; Stories page to explore articles,
-            community moments, and more.
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Return to the Blog &amp; Stories page
+            to explore articles, community
+            moments, memories, and more.
           </p>
 
           <Link
