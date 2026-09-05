@@ -6,6 +6,8 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import UpcomingSchedule from "@/components/home/UpcomingSchedule";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>
