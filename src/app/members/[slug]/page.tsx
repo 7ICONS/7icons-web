@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import MemberDetail from "@/components/members/MemberDetail";
-import { members } from "@/data/members";
+import { getPublishedMemberBySlug } from "@/lib/members";
 
 type MemberPageProps = {
   params: Promise<{
@@ -12,22 +12,15 @@ type MemberPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return members
-    .filter((member) => member.profile)
-    .map((member) => ({
-      slug: member.slug,
-    }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: MemberPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const member = members.find(
-    (item) => item.slug === slug && item.profile,
-  );
+  const member =
+    await getPublishedMemberBySlug(slug);
 
   if (!member) {
     return {
@@ -37,7 +30,25 @@ export async function generateMetadata({
 
   return {
     title: `${member.name} | 7ICONS`,
-    description: member.shortBio,
+    description:
+      member.short_bio ||
+      member.profile_description,
+
+    openGraph: {
+      title: member.name,
+      description:
+        member.short_bio ||
+        member.profile_description,
+
+      images: member.image_url
+        ? [
+            {
+              url: member.image_url,
+              alt: member.name,
+            },
+          ]
+        : undefined,
+    },
   };
 }
 
@@ -46,9 +57,8 @@ export default async function MemberPage({
 }: MemberPageProps) {
   const { slug } = await params;
 
-  const member = members.find(
-    (item) => item.slug === slug && item.profile,
-  );
+  const member =
+    await getPublishedMemberBySlug(slug);
 
   if (!member) {
     notFound();
