@@ -15,13 +15,17 @@ const navItems = [
     href: "/blog",
   },
   {
-    label: "Members",
-    href: "/members",
-  },
-  {
-    label: "Fan Representatives",
-    href: "/fan-representatives",
-  },
+  label: "Members",
+  href: "/members",
+},
+{
+  label: "Gallery",
+  href: "/gallery",
+},
+{
+  label: "Fan Representatives",
+  href: "/fan-representatives",
+},
   {
     label: "About",
     href: "/about",
