@@ -1,20 +1,29 @@
-import GalleryContent from "@/components/gallery/GalleryContent";
+import type { Metadata } from "next";
 
+import GalleryContent from "@/components/gallery/GalleryContent";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
-export const metadata = {
+import { getPublishedGalleryAlbums } from "@/lib/gallery";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
   title: "Gallery | 7ICONS",
   description:
     "Explore photos, memories, performances, and moments from the journey of 7ICONS and ICONIA.",
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const albums =
+    await getPublishedGalleryAlbums();
+
   return (
     <>
       <Navbar />
 
       <main>
+        {/* Hero */}
         <section className="relative overflow-hidden border-b border-violet-100 bg-gradient-to-b from-[#f3edff] via-[#faf8ff] to-white">
           <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-violet-300/20 blur-3xl" />
 
@@ -34,14 +43,19 @@ export default function GalleryPage() {
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-              Explore photos, performances, behind-the-scenes moments,
-              and memories that capture the journey of 7ICONS together
+              Explore photos, performances,
+              behind-the-scenes moments,
+              and memories that capture
+              the journey of 7ICONS together
               with ICONIA.
             </p>
           </div>
         </section>
 
-        <GalleryContent />
+        {/* Gallery */}
+        <GalleryContent
+          albums={albums}
+        />
       </main>
 
       <Footer />
