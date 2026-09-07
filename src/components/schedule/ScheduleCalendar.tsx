@@ -1,7 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { scheduleEvents } from "@/data/schedule";
+
+import type { ScheduleEvent } from "@/lib/schedule";
+
+type ScheduleCalendarProps = {
+  events: ScheduleEvent[];
+};
 
 const monthNames = [
   "January",
@@ -26,7 +31,9 @@ function parseLocalDate(dateString: string) {
   return new Date(year, month - 1, day);
 }
 
-export default function ScheduleCalendar() {
+export default function ScheduleCalendar({
+  events,
+}: ScheduleCalendarProps) {
   const today = new Date();
 
   const [currentDate, setCurrentDate] = useState(
@@ -94,8 +101,8 @@ export default function ScheduleCalendar() {
   function getEventsForDay(day: number) {
     const dateString = buildDateString(day);
 
-    return scheduleEvents.filter(
-      (event) => event.date === dateString,
+    return events.filter(
+      (event) => event.event_date === dateString,
     );
   }
 
@@ -108,8 +115,8 @@ export default function ScheduleCalendar() {
   }
 
   const selectedEvents = selectedDate
-    ? scheduleEvents.filter(
-        (event) => event.date === selectedDate,
+    ? events.filter(
+        (event) => event.event_date === selectedDate,
       )
     : [];
 
@@ -200,8 +207,8 @@ export default function ScheduleCalendar() {
                   );
                 }
 
-                const events = getEventsForDay(day);
-                const eventExists = events.length > 0;
+                const dayEvents = getEventsForDay(day);
+                const eventExists = dayEvents.length > 0;
                 const todayDate = isToday(day);
                 const dateString = buildDateString(day);
                 const selected = selectedDate === dateString;
@@ -294,7 +301,7 @@ export default function ScheduleCalendar() {
                       className="rounded-2xl border border-violet-100 bg-white p-5 shadow-sm"
                     >
                       <span className="inline-flex rounded-full bg-violet-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-600">
-                        {event.type}
+                        {event.event_type}
                       </span>
 
                       <h4 className="mt-3 text-lg font-semibold text-slate-950">
@@ -302,8 +309,13 @@ export default function ScheduleCalendar() {
                       </h4>
 
                       <div className="mt-3 space-y-2 text-sm text-slate-500">
-                        <p>◷ {event.time}</p>
-                        <p>⌖ {event.location}</p>
+                        <p>
+                          ◷ {event.event_time || "Time TBD"}
+                        </p>
+
+                        <p>
+                          ⌖ {event.location || "Location TBD"}
+                        </p>
                       </div>
 
                       {event.description && (

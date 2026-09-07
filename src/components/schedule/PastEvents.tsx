@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { scheduleEvents } from "@/data/schedule";
+
+import type { ScheduleEvent } from "@/lib/schedule";
+
+type PastEventsProps = {
+  events: ScheduleEvent[];
+};
 
 const monthNames = [
   "JAN",
@@ -32,6 +37,7 @@ function formatEventDate(dateString: string) {
     day: String(date.getDate()).padStart(2, "0"),
     month: monthNames[date.getMonth()],
     year: date.getFullYear(),
+
     fullDate: date.toLocaleDateString("en-US", {
       weekday: "long",
       day: "numeric",
@@ -41,7 +47,9 @@ function formatEventDate(dateString: string) {
   };
 }
 
-export default function PastEvents() {
+export default function PastEvents({
+  events,
+}: PastEventsProps) {
   const pastEvents = useMemo(() => {
     const now = new Date();
 
@@ -51,14 +59,17 @@ export default function PastEvents() {
       now.getDate(),
     );
 
-    return scheduleEvents
-      .filter((event) => parseLocalDate(event.date) < today)
+    return events
+      .filter(
+        (event) =>
+          parseLocalDate(event.event_date) < today,
+      )
       .sort(
         (a, b) =>
-          parseLocalDate(b.date).getTime() -
-          parseLocalDate(a.date).getTime(),
+          parseLocalDate(b.event_date).getTime() -
+          parseLocalDate(a.event_date).getTime(),
       );
-  }, []);
+  }, [events]);
 
   if (pastEvents.length === 0) {
     return null;
@@ -90,7 +101,8 @@ export default function PastEvents() {
 
           <div className="space-y-5">
             {pastEvents.map((event) => {
-              const formattedDate = formatEventDate(event.date);
+              const formattedDate =
+                formatEventDate(event.event_date);
 
               return (
                 <article
@@ -121,12 +133,18 @@ export default function PastEvents() {
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="rounded-full bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-600">
-                            {event.type}
+                            {event.event_type}
                           </span>
 
                           <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                             Completed
                           </span>
+
+                          {event.is_featured && (
+                            <span className="rounded-full bg-amber-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-700">
+                              Featured
+                            </span>
+                          )}
 
                           <span className="text-xs text-slate-400">
                             {formattedDate.fullDate}
@@ -138,8 +156,17 @@ export default function PastEvents() {
                         </h3>
 
                         <div className="mt-3 flex flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:flex-wrap sm:gap-x-6">
-                          <span>◷ {event.time}</span>
-                          <span>⌖ {event.location}</span>
+                          <span>
+                            ◷{" "}
+                            {event.event_time ||
+                              "Time TBD"}
+                          </span>
+
+                          <span>
+                            ⌖{" "}
+                            {event.location ||
+                              "Location TBD"}
+                          </span>
                         </div>
 
                         {event.description && (
@@ -156,7 +183,10 @@ export default function PastEvents() {
                           className="inline-flex items-center gap-2 text-sm font-semibold text-violet-700 transition hover:text-violet-900"
                         >
                           View Details
-                          <span aria-hidden="true">→</span>
+
+                          <span aria-hidden="true">
+                            →
+                          </span>
                         </Link>
                       </div>
                     </div>

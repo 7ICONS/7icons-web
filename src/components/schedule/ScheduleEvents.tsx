@@ -2,10 +2,15 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import {
-  scheduleEvents,
-  type ScheduleType,
-} from "@/data/schedule";
+
+import type {
+  ScheduleEvent,
+  ScheduleType,
+} from "@/lib/schedule";
+
+type ScheduleEventsProps = {
+  events: ScheduleEvent[];
+};
 
 type FilterType = "All" | ScheduleType;
 
@@ -46,6 +51,7 @@ function formatEventDate(dateString: string) {
     day: String(date.getDate()).padStart(2, "0"),
     month: monthNames[date.getMonth()],
     year: date.getFullYear(),
+
     fullDate: date.toLocaleDateString("en-US", {
       weekday: "long",
       day: "numeric",
@@ -55,7 +61,9 @@ function formatEventDate(dateString: string) {
   };
 }
 
-export default function ScheduleEvents() {
+export default function ScheduleEvents({
+  events,
+}: ScheduleEventsProps) {
   const [activeFilter, setActiveFilter] =
     useState<FilterType>("All");
 
@@ -68,24 +76,30 @@ export default function ScheduleEvents() {
       now.getDate(),
     );
 
-    return scheduleEvents
+    return events
       .filter((event) => {
-        const eventDate = parseLocalDate(event.date);
+        const eventDate = parseLocalDate(
+          event.event_date,
+        );
 
         const isUpcoming = eventDate >= today;
 
         const matchesFilter =
           activeFilter === "All" ||
-          event.type === activeFilter;
+          event.event_type === activeFilter;
 
         return isUpcoming && matchesFilter;
       })
       .sort(
         (a, b) =>
-          parseLocalDate(a.date).getTime() -
-          parseLocalDate(b.date).getTime(),
+          parseLocalDate(
+            a.event_date,
+          ).getTime() -
+          parseLocalDate(
+            b.event_date,
+          ).getTime(),
       );
-  }, [activeFilter]);
+  }, [activeFilter, events]);
 
   return (
     <section className="relative overflow-hidden bg-[#faf8ff] py-16 sm:py-20 md:py-24">
@@ -115,15 +129,19 @@ export default function ScheduleEvents() {
         {/* Filters */}
         <div className="mt-8 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {filters.map((filter) => {
-            const active = activeFilter === filter;
+            const active =
+              activeFilter === filter;
 
             return (
               <button
                 key={filter}
                 type="button"
-                onClick={() => setActiveFilter(filter)}
+                onClick={() =>
+                  setActiveFilter(filter)
+                }
                 className={[
                   "shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition",
+
                   active
                     ? "border-violet-700 bg-violet-700 text-white shadow-md shadow-violet-300/30"
                     : "border-violet-200 bg-white text-slate-600 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700",
@@ -151,7 +169,9 @@ export default function ScheduleEvents() {
           {activeFilter !== "All" && (
             <button
               type="button"
-              onClick={() => setActiveFilter("All")}
+              onClick={() =>
+                setActiveFilter("All")
+              }
               className="text-sm font-semibold text-violet-700 transition hover:text-violet-900"
             >
               Clear Filter
@@ -163,9 +183,10 @@ export default function ScheduleEvents() {
         <div className="mt-6 space-y-4">
           {upcomingEvents.length > 0 ? (
             upcomingEvents.map((event) => {
-              const formattedDate = formatEventDate(
-                event.date,
-              );
+              const formattedDate =
+                formatEventDate(
+                  event.event_date,
+                );
 
               return (
                 <article
@@ -177,15 +198,21 @@ export default function ScheduleEvents() {
                     <div className="flex sm:block">
                       <div className="flex h-[82px] w-[76px] shrink-0 flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50">
                         <span className="text-2xl font-semibold leading-none text-violet-700">
-                          {formattedDate.day}
+                          {
+                            formattedDate.day
+                          }
                         </span>
 
                         <span className="mt-1 text-[10px] font-semibold tracking-[0.16em] text-violet-500">
-                          {formattedDate.month}
+                          {
+                            formattedDate.month
+                          }
                         </span>
 
                         <span className="mt-0.5 text-[9px] text-slate-400">
-                          {formattedDate.year}
+                          {
+                            formattedDate.year
+                          }
                         </span>
                       </div>
                     </div>
@@ -194,12 +221,22 @@ export default function ScheduleEvents() {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-violet-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-600">
-                          {event.type}
+                          {
+                            event.event_type
+                          }
                         </span>
 
                         <span className="text-xs text-slate-400">
-                          {formattedDate.fullDate}
+                          {
+                            formattedDate.fullDate
+                          }
                         </span>
+
+                        {event.is_featured && (
+                          <span className="rounded-full bg-amber-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-700">
+                            Featured
+                          </span>
+                        )}
                       </div>
 
                       <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl">
@@ -208,32 +245,40 @@ export default function ScheduleEvents() {
 
                       <div className="mt-3 flex flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:flex-wrap sm:gap-x-6">
                         <span>
-                          ◷ {event.time}
+                          ◷{" "}
+                          {event.event_time ||
+                            "Time TBD"}
                         </span>
 
                         <span>
-                          ⌖ {event.location}
+                          ⌖{" "}
+                          {event.location ||
+                            "Location TBD"}
                         </span>
                       </div>
 
                       {event.description && (
                         <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-600">
-                          {event.description}
+                          {
+                            event.description
+                          }
                         </p>
                       )}
                     </div>
 
                     {/* Detail Button */}
-                    {/* Detail Button */}
-<div className="shrink-0 sm:self-center">
-  <Link
-    href={`/schedule/${event.slug}`}
-    className="inline-flex items-center gap-2 rounded-xl border border-violet-200 bg-white px-4 py-2.5 text-sm font-semibold text-violet-700 transition group-hover:border-violet-300 group-hover:bg-violet-50"
-  >
-    View Details
-    <span aria-hidden="true">→</span>
-  </Link>
-</div>
+                    <div className="shrink-0 sm:self-center">
+                      <Link
+                        href={`/schedule/${event.slug}`}
+                        className="inline-flex items-center gap-2 rounded-xl border border-violet-200 bg-white px-4 py-2.5 text-sm font-semibold text-violet-700 transition group-hover:border-violet-300 group-hover:bg-violet-50"
+                      >
+                        View Details
+
+                        <span aria-hidden="true">
+                          →
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                 </article>
               );
@@ -255,7 +300,9 @@ export default function ScheduleEvents() {
 
               <button
                 type="button"
-                onClick={() => setActiveFilter("All")}
+                onClick={() =>
+                  setActiveFilter("All")
+                }
                 className="mt-5 text-sm font-semibold text-violet-700 transition hover:text-violet-900"
               >
                 Show All Events

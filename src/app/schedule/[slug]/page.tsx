@@ -4,7 +4,12 @@ import { notFound } from "next/navigation";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import { scheduleEvents } from "@/data/schedule";
+
+import {
+  getPublishedScheduleEventBySlug,
+} from "@/lib/schedule";
+
+export const dynamic = "force-dynamic";
 
 type ScheduleDetailPageProps = {
   params: Promise<{
@@ -13,13 +18,21 @@ type ScheduleDetailPageProps = {
 };
 
 function parseLocalDate(dateString: string) {
-  const [year, month, day] = dateString.split("-").map(Number);
+  const [year, month, day] = dateString
+    .split("-")
+    .map(Number);
 
-  return new Date(year, month - 1, day);
+  return new Date(
+    year,
+    month - 1,
+    day,
+  );
 }
 
 function formatFullDate(dateString: string) {
-  return parseLocalDate(dateString).toLocaleDateString("en-US", {
+  return parseLocalDate(
+    dateString,
+  ).toLocaleDateString("en-US", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -27,20 +40,15 @@ function formatFullDate(dateString: string) {
   });
 }
 
-export function generateStaticParams() {
-  return scheduleEvents.map((event) => ({
-    slug: event.slug,
-  }));
-}
-
 export async function generateMetadata({
   params,
 }: ScheduleDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const event = scheduleEvents.find(
-    (item) => item.slug === slug,
-  );
+  const event =
+    await getPublishedScheduleEventBySlug(
+      slug,
+    );
 
   if (!event) {
     return {
@@ -50,7 +58,9 @@ export async function generateMetadata({
 
   return {
     title: `${event.title} | 7ICONS`,
-    description: event.description,
+    description:
+      event.description ||
+      `${event.title} schedule information from 7ICONS.`,
   };
 }
 
@@ -59,20 +69,22 @@ export default async function ScheduleDetailPage({
 }: ScheduleDetailPageProps) {
   const { slug } = await params;
 
-  const event = scheduleEvents.find(
-    (item) => item.slug === slug,
-  );
+  const event =
+    await getPublishedScheduleEventBySlug(
+      slug,
+    );
 
   if (!event) {
     notFound();
   }
 
-  const fullDate = formatFullDate(event.date);
+  const fullDate = formatFullDate(
+    event.event_date,
+  );
 
   // =========================================
   // EVENT STATUS
   // =========================================
-
   const today = new Date();
 
   const todayOnly = new Date(
@@ -81,9 +93,12 @@ export default async function ScheduleDetailPage({
     today.getDate(),
   );
 
-  const eventDate = parseLocalDate(event.date);
+  const eventDate = parseLocalDate(
+    event.event_date,
+  );
 
-  const isPastEvent = eventDate < todayOnly;
+  const isPastEvent =
+    eventDate < todayOnly;
 
   const eventStatus = isPastEvent
     ? "Completed"
@@ -97,7 +112,6 @@ export default async function ScheduleDetailPage({
         {/* =========================================
             EVENT HERO
         ========================================= */}
-
         <section className="relative overflow-hidden border-b border-violet-100 bg-gradient-to-b from-[#f3edff] via-[#faf8ff] to-white">
           {/* Background Decorations */}
           <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-violet-300/20 blur-3xl" />
@@ -110,7 +124,10 @@ export default async function ScheduleDetailPage({
               href="/schedule"
               className="inline-flex items-center gap-2 text-sm font-semibold text-violet-600 transition hover:text-violet-800"
             >
-              <span aria-hidden="true">←</span>
+              <span aria-hidden="true">
+                ←
+              </span>
+
               Back to Schedule
             </Link>
 
@@ -119,7 +136,7 @@ export default async function ScheduleDetailPage({
               <div className="flex flex-wrap gap-2">
                 {/* Event Category */}
                 <span className="inline-flex rounded-full border border-violet-200 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-violet-700 backdrop-blur-sm">
-                  {event.type}
+                  {event.event_type}
                 </span>
 
                 {/* Event Status */}
@@ -133,6 +150,12 @@ export default async function ScheduleDetailPage({
                 >
                   {eventStatus}
                 </span>
+
+                {event.is_featured && (
+                  <span className="inline-flex rounded-full bg-amber-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
+                    Featured
+                  </span>
+                )}
               </div>
 
               {/* Event Title */}
@@ -142,7 +165,8 @@ export default async function ScheduleDetailPage({
 
               {/* Event Description */}
               <p className="mt-6 max-w-3xl text-base leading-8 text-slate-600 md:text-lg">
-                {event.description}
+                {event.description ||
+                  "More information about this event will be available soon."}
               </p>
             </div>
           </div>
@@ -151,13 +175,11 @@ export default async function ScheduleDetailPage({
         {/* =========================================
             EVENT INFORMATION
         ========================================= */}
-
         <section className="mx-auto max-w-[1000px] px-5 py-14 sm:px-8 md:py-20 lg:px-10">
           <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
             {/* =========================================
                 MAIN CONTENT
             ========================================= */}
-
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600">
                 Event Details
@@ -168,7 +190,8 @@ export default async function ScheduleDetailPage({
               </h2>
 
               <p className="mt-6 text-base leading-8 text-slate-700">
-                {event.description}
+                {event.description ||
+                  "More information about this event will be available soon."}
               </p>
 
               <p className="mt-5 text-base leading-8 text-slate-700">
@@ -206,7 +229,6 @@ export default async function ScheduleDetailPage({
             {/* =========================================
                 EVENT SUMMARY
             ========================================= */}
-
             <aside className="h-fit rounded-3xl border border-violet-100 bg-white p-6 shadow-xl shadow-violet-950/5 lg:sticky lg:top-24">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600">
                 Event Information
@@ -231,7 +253,8 @@ export default async function ScheduleDetailPage({
                   </p>
 
                   <p className="mt-2 font-semibold text-slate-900">
-                    {event.time}
+                    {event.event_time ||
+                      "Time TBD"}
                   </p>
                 </div>
 
@@ -242,7 +265,8 @@ export default async function ScheduleDetailPage({
                   </p>
 
                   <p className="mt-2 font-semibold leading-6 text-slate-900">
-                    {event.location}
+                    {event.location ||
+                      "Location TBD"}
                   </p>
                 </div>
 
@@ -253,7 +277,7 @@ export default async function ScheduleDetailPage({
                   </p>
 
                   <span className="mt-2 inline-flex rounded-full bg-violet-50 px-3 py-1.5 text-xs font-semibold text-violet-700">
-                    {event.type}
+                    {event.event_type}
                   </span>
                 </div>
 
@@ -274,6 +298,19 @@ export default async function ScheduleDetailPage({
                     {eventStatus}
                   </span>
                 </div>
+
+                {/* Featured */}
+                {event.is_featured && (
+                  <div className="border-t border-violet-100 pt-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+                      Highlight
+                    </p>
+
+                    <span className="mt-2 inline-flex rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700">
+                      Featured Event
+                    </span>
+                  </div>
+                )}
               </div>
             </aside>
           </div>

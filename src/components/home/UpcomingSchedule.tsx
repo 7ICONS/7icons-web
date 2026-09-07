@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { scheduleEvents } from "@/data/schedule";
+
+import type { ScheduleEvent } from "@/lib/schedule";
+
+type UpcomingScheduleProps = {
+  events: ScheduleEvent[];
+};
 
 const monthNames = [
   "January",
@@ -36,7 +41,9 @@ function formatEventDate(dateString: string) {
   };
 }
 
-export default function UpcomingSchedule() {
+export default function UpcomingSchedule({
+  events,
+}: UpcomingScheduleProps) {
   const today = new Date();
 
   const [currentDate, setCurrentDate] = useState(
@@ -56,7 +63,7 @@ export default function UpcomingSchedule() {
     // Sunday = 0
     // Monday = 1
     //
-    // Calendar kita:
+    // Calendar:
     // Monday = 0
     // Sunday = 6
     const startingDay = (firstDay.getDay() + 6) % 7;
@@ -75,21 +82,26 @@ export default function UpcomingSchedule() {
   }, [currentMonth, currentYear]);
 
   const upcomingEvents = useMemo(() => {
+    const now = new Date();
+
     const todayOnly = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate(),
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
     );
 
-    return scheduleEvents
-      .filter((event) => parseLocalDate(event.date) >= todayOnly)
+    return [...events]
+      .filter(
+        (event) =>
+          parseLocalDate(event.event_date) >= todayOnly,
+      )
       .sort(
         (a, b) =>
-          parseLocalDate(a.date).getTime() -
-          parseLocalDate(b.date).getTime(),
+          parseLocalDate(a.event_date).getTime() -
+          parseLocalDate(b.event_date).getTime(),
       )
       .slice(0, 4);
-  }, []);
+  }, [events]);
 
   function previousMonth() {
     setCurrentDate(
@@ -104,8 +116,8 @@ export default function UpcomingSchedule() {
   }
 
   function hasEvent(day: number) {
-    return scheduleEvents.some((event) => {
-      const eventDate = parseLocalDate(event.date);
+    return events.some((event) => {
+      const eventDate = parseLocalDate(event.event_date);
 
       return (
         eventDate.getFullYear() === currentYear &&
@@ -218,6 +230,7 @@ export default function UpcomingSchedule() {
                     <div
                       className={[
                         "relative flex h-9 w-9 items-center justify-center rounded-full text-sm transition sm:h-11 sm:w-11",
+
                         todayDate
                           ? "bg-gradient-to-br from-violet-700 to-purple-500 font-semibold text-white shadow-md shadow-violet-400/30"
                           : eventExists
@@ -231,6 +244,7 @@ export default function UpcomingSchedule() {
                         <span
                           className={[
                             "absolute bottom-1 h-1 w-1 rounded-full",
+
                             todayDate
                               ? "bg-white"
                               : "bg-violet-600",
@@ -247,11 +261,13 @@ export default function UpcomingSchedule() {
             <div className="mt-6 flex flex-wrap items-center justify-center gap-5 border-t border-violet-50 pt-5 text-xs text-slate-500">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-violet-700 to-purple-500" />
+
                 Today
               </div>
 
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-violet-200" />
+
                 Event
               </div>
             </div>
@@ -278,7 +294,8 @@ export default function UpcomingSchedule() {
             <div className="space-y-4">
               {upcomingEvents.length > 0 ? (
                 upcomingEvents.map((event) => {
-                  const formattedDate = formatEventDate(event.date);
+                  const formattedDate =
+                    formatEventDate(event.event_date);
 
                   return (
                     <article
@@ -301,7 +318,7 @@ export default function UpcomingSchedule() {
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-600">
-                              {event.type}
+                              {event.event_type}
                             </span>
                           </div>
 
@@ -310,8 +327,17 @@ export default function UpcomingSchedule() {
                           </h4>
 
                           <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 sm:text-sm">
-                            <span>◷ {event.time}</span>
-                            <span>⌖ {event.location}</span>
+                            <span>
+                              ◷{" "}
+                              {event.event_time ||
+                                "Time TBD"}
+                            </span>
+
+                            <span>
+                              ⌖{" "}
+                              {event.location ||
+                                "Location TBD"}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -332,17 +358,19 @@ export default function UpcomingSchedule() {
               )}
             </div>
 
-            {/* Future Full Schedule Button */}
             {/* Full Schedule Link */}
-<div className="mt-6">
-  <Link
-    href="/schedule"
-    className="inline-flex items-center gap-2 text-sm font-semibold text-violet-700 transition hover:text-violet-900"
-  >
-    View Full Schedule
-    <span aria-hidden="true">→</span>
-  </Link>
-</div>
+            <div className="mt-6">
+              <Link
+                href="/schedule"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-violet-700 transition hover:text-violet-900"
+              >
+                View Full Schedule
+
+                <span aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
