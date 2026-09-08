@@ -3,17 +3,22 @@ import Hero from "@/components/home/Hero";
 import IconiaAcrossIndonesia from "@/components/home/IconiaAcrossIndonesia";
 import MeetMembers from "@/components/home/MeetMembers";
 import UpcomingSchedule from "@/components/home/UpcomingSchedule";
-
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
+import { getPublishedFanRepresentatives } from "@/lib/fan-representatives";
 import { getPublishedScheduleEvents } from "@/lib/schedule";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const scheduleEvents =
-    await getPublishedScheduleEvents();
+  const [
+    scheduleEvents,
+    fanRepresentatives,
+  ] = await Promise.all([
+    getPublishedScheduleEvents(),
+    getPublishedFanRepresentatives(),
+  ]);
 
   return (
     <>
@@ -30,7 +35,11 @@ export default async function Home() {
           events={scheduleEvents}
         />
 
-        <IconiaAcrossIndonesia />
+        <IconiaAcrossIndonesia
+          representativeCount={
+            fanRepresentatives.length
+          }
+        />
       </main>
 
       <Footer />

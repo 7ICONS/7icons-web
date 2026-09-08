@@ -1,26 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const highlights = [
-  {
-    value: "38",
-    label: "Provinces",
-  },
-  {
-    value: "Growing",
-    label: "Representative Network",
-  },
-  {
-    value: "1",
-    label: "United Community",
-  },
-];
+type IconiaAcrossIndonesiaProps = {
+  representativeCount: number;
+};
 
-export default function IconiaAcrossIndonesia() {
+export default function IconiaAcrossIndonesia({
+  representativeCount,
+}: IconiaAcrossIndonesiaProps) {
+  const highlights = [
+    {
+      value: "38",
+      label: "Provinces",
+    },
+    {
+      value: representativeCount.toString(),
+      label: "Fan Representatives",
+    },
+    {
+      value: "1",
+      label: "United Community",
+    },
+  ];
+
   return (
     <section className="relative overflow-hidden bg-white py-16 md:py-20">
       {/* Background decoration */}
       <div className="absolute -left-32 top-24 h-80 w-80 rounded-full bg-violet-200/30 blur-3xl" />
+
       <div className="absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-purple-200/30 blur-3xl" />
 
       <div className="relative mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10">
@@ -39,8 +46,8 @@ export default function IconiaAcrossIndonesia() {
           </h2>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
-            Discover fan representatives and communities connecting ICONIA
-            from different regions across Indonesia.
+            Discover fan representatives and communities connecting
+            ICONIA from different regions across Indonesia.
           </p>
         </div>
 
@@ -81,9 +88,9 @@ export default function IconiaAcrossIndonesia() {
               </h3>
 
               <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base">
-                Meet the people representing ICONIA in different regions,
-                discover their communities, and stay connected with stories
-                from across Indonesia.
+                Meet the people representing ICONIA in different
+                regions, discover their communities, and stay connected
+                with stories from across Indonesia.
               </p>
 
               {/* Highlights */}
