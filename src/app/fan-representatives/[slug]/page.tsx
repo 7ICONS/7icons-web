@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+
 import { notFound } from "next/navigation";
 
+import RepresentativeDetail from "@/components/fan-representatives/RepresentativeDetail";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import RepresentativeDetail from "@/components/fan-representatives/RepresentativeDetail";
-import { fanRepresentatives } from "@/data/fanRepresentatives";
+
+import { getPublishedFanRepresentativeBySlug } from "@/lib/fan-representatives";
+
+export const dynamic = "force-dynamic";
 
 type RepresentativePageProps = {
   params: Promise<{
@@ -12,32 +16,27 @@ type RepresentativePageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return fanRepresentatives
-    .filter((representative) => representative.profile)
-    .map((representative) => ({
-      slug: representative.slug,
-    }));
-}
-
 export async function generateMetadata({
   params,
 }: RepresentativePageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const representative = fanRepresentatives.find(
-    (item) => item.slug === slug && item.profile,
-  );
+  const representative =
+    await getPublishedFanRepresentativeBySlug(
+      slug,
+    );
 
   if (!representative) {
     return {
-      title: "Representative Not Found | 7ICONS",
+      title:
+        "Representative Not Found | 7ICONS",
     };
   }
 
   return {
     title: `${representative.name} | ICONIA Fan Representative`,
-    description: representative.shortBio,
+    description:
+      representative.shortBio,
   };
 }
 
@@ -46,11 +45,15 @@ export default async function RepresentativePage({
 }: RepresentativePageProps) {
   const { slug } = await params;
 
-  const representative = fanRepresentatives.find(
-    (item) => item.slug === slug && item.profile,
-  );
+  const representative =
+    await getPublishedFanRepresentativeBySlug(
+      slug,
+    );
 
-  if (!representative) {
+  if (
+    !representative ||
+    !representative.profile
+  ) {
     notFound();
   }
 
@@ -59,7 +62,11 @@ export default async function RepresentativePage({
       <Navbar />
 
       <main>
-        <RepresentativeDetail representative={representative} />
+        <RepresentativeDetail
+          representative={
+            representative
+          }
+        />
       </main>
 
       <Footer />

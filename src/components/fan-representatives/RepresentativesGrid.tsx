@@ -1,9 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import { fanRepresentatives } from "@/data/fanRepresentatives";
+import type { FanRepresentative } from "@/lib/fan-representatives";
 
-export default function RepresentativesGrid() {
+type RepresentativesGridProps = {
+  representatives: FanRepresentative[];
+};
+
+export default function RepresentativesGrid({
+  representatives,
+}: RepresentativesGridProps) {
   return (
     <section className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24">
       {/* Background Decorations */}
@@ -33,59 +38,99 @@ export default function RepresentativesGrid() {
         </div>
 
         {/* Representative Grid */}
-        <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-6 md:grid-cols-3">
-          {fanRepresentatives.map((representative) => (
-            <article
-              key={representative.id}
-              className="group"
-            >
-              <Link
-                href={`/fan-representatives/${representative.slug}`}
-                className="block"
-              >
-                {/* Representative Portrait */}
-<div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-violet-100 bg-violet-50 shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-violet-950/10">
-  <Image
-    src={representative.image}
-    alt={representative.name}
-    fill
-    sizes="(max-width: 767px) 50vw, 33vw"
-    className="object-cover transition duration-500 group-hover:scale-[1.03]"
-  />
+        {representatives.length > 0 ? (
+          <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-6 md:grid-cols-3">
+            {representatives.map(
+              (representative) => (
+                <article
+                  key={representative.id}
+                  className="group"
+                >
+                  <Link
+                    href={`/fan-representatives/${representative.slug}`}
+                    className="block"
+                  >
+                    {/* Representative Portrait */}
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-violet-100 bg-violet-50 shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-violet-950/10">
+                      {representative.image ? (
+                        <div
+                          role="img"
+                          aria-label={
+                            representative.name
+                          }
+                          className="absolute inset-0 bg-cover bg-center transition duration-500 group-hover:scale-[1.03]"
+                          style={{
+                            backgroundImage: `url("${representative.image}")`,
+                          }}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-violet-50 to-purple-50">
+                          <span className="text-4xl font-semibold text-violet-300">
+                            {representative.name
+                              .charAt(0)
+                              .toUpperCase()}
+                          </span>
+                        </div>
+                      )}
 
-  {/* Region Badge */}
-  <div className="absolute left-4 top-4">
-    <span className="rounded-full border border-white/70 bg-white/85 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-700 shadow-sm backdrop-blur-md">
-      {representative.region}
-    </span>
-  </div>
+                      {/* Region Badge */}
+                      <div className="absolute left-4 top-4">
+                        <span className="rounded-full border border-white/70 bg-white/85 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-700 shadow-sm backdrop-blur-md">
+                          {
+                            representative.region
+                          }
+                        </span>
+                      </div>
 
-  {/* Hover Overlay */}
-  <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-violet-950/80 via-violet-900/40 to-transparent px-5 pb-5 pt-20 transition-transform duration-300 group-hover:translate-y-0">
-    <span className="text-sm font-semibold text-white">
-      View Profile →
-    </span>
-  </div>
-</div>
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-violet-950/80 via-violet-900/40 to-transparent px-5 pb-5 pt-20 transition-transform duration-300 group-hover:translate-y-0">
+                        <span className="text-sm font-semibold text-white">
+                          View Profile →
+                        </span>
+                      </div>
+                    </div>
 
-                {/* Representative Information */}
-                <div className="px-1 pt-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-violet-600 sm:text-xs">
-                    {representative.city}
-                  </p>
+                    {/* Representative Information */}
+                    <div className="px-1 pt-5">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-violet-600 sm:text-xs">
+                        {
+                          representative.city
+                        }
+                      </p>
 
-                  <h3 className="mt-1 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
-                    {representative.name}
-                  </h3>
+                      <h3 className="mt-1 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
+                        {
+                          representative.name
+                        }
+                      </h3>
 
-                  <p className="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
-                    {representative.role}
-                  </p>
-                </div>
-              </Link>
-            </article>
-          ))}
-        </div>
+                      <p className="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
+                        {
+                          representative.role
+                        }
+                      </p>
+                    </div>
+                  </Link>
+                </article>
+              ),
+            )}
+          </div>
+        ) : (
+          <div className="mt-12 rounded-3xl border border-dashed border-violet-200 bg-violet-50/40 px-6 py-16 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl text-violet-500 shadow-sm">
+              ✦
+            </div>
+
+            <h3 className="mt-5 text-lg font-semibold text-slate-900">
+              No representatives available
+            </h3>
+
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+              Published Fan Representatives
+              will appear here.
+            </p>
+          </div>
+        )}
 
         {/* More Regions */}
         <div className="mt-20 overflow-hidden rounded-3xl border border-violet-100 bg-gradient-to-br from-[#f7f3ff] via-white to-[#f3edff] px-6 py-10 text-center sm:px-10 sm:py-12">
