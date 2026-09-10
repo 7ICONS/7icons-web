@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+
 import { notFound } from "next/navigation";
 
 import ArticleDetail from "@/components/blog/ArticleDetail";
+import ArticleComments from "@/components/comments/ArticleComments";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import { getPublishedArticleBySlug } from "@/lib/articles";
@@ -19,17 +21,24 @@ export async function generateMetadata({
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const article = await getPublishedArticleBySlug(slug);
+  const article =
+    await getPublishedArticleBySlug(
+      slug,
+    );
 
   if (!article) {
     return {
-      title: "Article Not Found | 7ICONS",
+      title:
+        "Article Not Found | 7ICONS",
     };
   }
 
   return {
-    title: `${article.title} | 7ICONS`,
-    description: article.excerpt,
+    title:
+      `${article.title} | 7ICONS`,
+
+    description:
+      article.excerpt,
   };
 }
 
@@ -38,7 +47,10 @@ export default async function ArticlePage({
 }: ArticlePageProps) {
   const { slug } = await params;
 
-  const article = await getPublishedArticleBySlug(slug);
+  const article =
+    await getPublishedArticleBySlug(
+      slug,
+    );
 
   if (!article) {
     notFound();
@@ -49,7 +61,15 @@ export default async function ArticlePage({
       <Navbar />
 
       <main>
-        <ArticleDetail article={article} />
+        <ArticleDetail
+          article={article}
+        />
+
+        <ArticleComments
+          articleId={
+            article.id
+          }
+        />
       </main>
 
       <Footer />
