@@ -3,7 +3,20 @@ import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
-export default function SignUpPage() {
+import { signUp } from "./actions";
+
+type SignUpPageProps = {
+  searchParams: Promise<{
+    error?: string;
+    success?: string;
+  }>;
+};
+
+export default async function SignUpPage({
+  searchParams,
+}: SignUpPageProps) {
+  const { error, success } = await searchParams;
+
   return (
     <>
       <Navbar />
@@ -81,8 +94,41 @@ export default function SignUpPage() {
                 </p>
               </div>
 
+              {/* Error */}
+              {error && (
+                <div
+                  className="mt-7 rounded-xl border border-red-200 bg-red-50 px-4 py-3"
+                  role="alert"
+                  aria-live="polite"
+                >
+                  <p className="text-sm font-medium text-red-700">
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              {/* Success */}
+              {success && (
+                <div
+                  className="mt-7 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <p className="text-sm font-medium text-emerald-700">
+                    {success}
+                  </p>
+
+                  <Link
+                    href="/login"
+                    className="mt-2 inline-block text-sm font-semibold text-emerald-800 underline underline-offset-2"
+                  >
+                    Go to Sign In
+                  </Link>
+                </div>
+              )}
+
               {/* Form */}
-              <form className="mt-9 space-y-5">
+              <form action={signUp} className="mt-9 space-y-5">
                 {/* Full Name */}
                 <div>
                   <label
@@ -94,7 +140,10 @@ export default function SignUpPage() {
 
                   <input
                     id="fullName"
+                    name="fullName"
                     type="text"
+                    required
+                    autoComplete="name"
                     placeholder="Your full name"
                     className="mt-2 w-full rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                   />
@@ -111,7 +160,10 @@ export default function SignUpPage() {
 
                   <input
                     id="username"
+                    name="username"
                     type="text"
+                    required
+                    autoComplete="username"
                     placeholder="Choose a username"
                     className="mt-2 w-full rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                   />
@@ -128,7 +180,10 @@ export default function SignUpPage() {
 
                   <input
                     id="email"
+                    name="email"
                     type="email"
+                    required
+                    autoComplete="email"
                     placeholder="you@example.com"
                     className="mt-2 w-full rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                   />
@@ -145,7 +200,10 @@ export default function SignUpPage() {
 
                   <input
                     id="password"
+                    name="password"
                     type="password"
+                    required
+                    autoComplete="new-password"
                     placeholder="Create a password"
                     className="mt-2 w-full rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                   />
@@ -162,7 +220,10 @@ export default function SignUpPage() {
 
                   <input
                     id="confirmPassword"
+                    name="confirmPassword"
                     type="password"
+                    required
+                    autoComplete="new-password"
                     placeholder="Repeat your password"
                     className="mt-2 w-full rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                   />
@@ -171,7 +232,10 @@ export default function SignUpPage() {
                 {/* Terms */}
                 <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-600">
                   <input
+                    name="terms"
+                    value="accepted"
                     type="checkbox"
+                    required
                     className="mt-1 h-4 w-4 shrink-0 rounded border-violet-200 accent-violet-700"
                   />
 
@@ -196,7 +260,7 @@ export default function SignUpPage() {
 
                 {/* Create Account */}
                 <button
-                  type="button"
+                  type="submit"
                   className="w-full rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:-translate-y-0.5 hover:shadow-xl"
                 >
                   Create Account
@@ -236,15 +300,6 @@ export default function SignUpPage() {
                   Sign in
                 </Link>
               </p>
-
-              {/* UI Notice */}
-              <div className="mt-8 rounded-2xl border border-violet-100 bg-[#faf8ff] px-5 py-4">
-                <p className="text-center text-xs leading-6 text-slate-500">
-                  Account registration is not active yet. This page
-                  currently serves as the visual interface for the
-                  upcoming account system.
-                </p>
-              </div>
             </div>
           </div>
         </section>
