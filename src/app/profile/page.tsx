@@ -47,13 +47,16 @@ function resolveAccountBadge(
 export default async function ProfilePage({
   searchParams,
 }: ProfilePageProps) {
-  const { success } = await searchParams;
+  const { success } =
+    await searchParams;
 
-  const supabase = await createClient();
+  const supabase =
+    await createClient();
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } =
+    await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -61,7 +64,10 @@ export default async function ProfilePage({
 
   const [
     { data: profile },
-    { data: badgeRows, error: badgeError },
+    {
+      data: badgeRows,
+      error: badgeError,
+    },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -70,6 +76,9 @@ export default async function ProfilePage({
           username,
           full_name,
           avatar_url,
+          background_url,
+          background_position_x,
+          background_position_y,
           bio,
           created_at,
           updated_at
@@ -81,7 +90,9 @@ export default async function ProfilePage({
     supabase.rpc(
       "get_public_account_badges",
       {
-        target_user_ids: [user.id],
+        target_user_ids: [
+          user.id,
+        ],
       },
     ),
   ]);
@@ -98,9 +109,12 @@ export default async function ProfilePage({
       ? (badgeRows as PublicAccountBadgeRow[])
       : [];
 
-  const badgeRow = publicBadges.find(
-    (item) => item.user_id === user.id,
-  );
+  const badgeRow =
+    publicBadges.find(
+      (item) =>
+        item.user_id ===
+        user.id,
+    );
 
   const accountBadge =
     resolveAccountBadge(
@@ -122,6 +136,18 @@ export default async function ProfilePage({
     displayName
       .charAt(0)
       .toUpperCase();
+
+  const backgroundPositionX =
+    typeof profile?.background_position_x ===
+    "number"
+      ? profile.background_position_x
+      : 50;
+
+  const backgroundPositionY =
+    typeof profile?.background_position_y ===
+    "number"
+      ? profile.background_position_y
+      : 50;
 
   const memberSince =
     profile?.created_at
@@ -145,6 +171,7 @@ export default async function ProfilePage({
       <main className="relative min-h-screen overflow-hidden bg-[#faf8ff]">
         {/* Background Decorations */}
         <div className="pointer-events-none absolute -left-40 top-20 h-[420px] w-[420px] rounded-full bg-violet-300/20 blur-3xl" />
+
         <div className="pointer-events-none absolute -right-40 top-72 h-[460px] w-[460px] rounded-full bg-purple-300/20 blur-3xl" />
 
         <section className="relative mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
@@ -160,8 +187,10 @@ export default async function ProfilePage({
               </h1>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                Your personal space inside the digital home
-                of 7ICONS & ICONIA.
+                Your personal
+                space inside the
+                digital home of
+                7ICONS & ICONIA.
               </p>
             </div>
 
@@ -192,17 +221,40 @@ export default async function ProfilePage({
             ========================= */}
             <div className="overflow-hidden rounded-[2rem] border border-violet-100 bg-white shadow-xl shadow-violet-950/5">
               {/* Cover */}
-              <div className="h-36 bg-gradient-to-br from-violet-700 via-purple-600 to-fuchsia-500" />
+              {profile?.background_url ? (
+                <div className="relative h-36 overflow-hidden bg-violet-600">
+                  <img
+                    src={
+                      profile.background_url
+                    }
+                    alt={`${displayName} profile background`}
+                    draggable={
+                      false
+                    }
+                    style={{
+                      objectPosition:
+                        `${backgroundPositionX}% ${backgroundPositionY}%`,
+                    }}
+                    className="h-full w-full select-none object-cover"
+                  />
 
-              <div className="px-7 pb-8">
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
+                </div>
+              ) : (
+                <div className="h-36 bg-gradient-to-br from-violet-700 via-purple-600 to-fuchsia-500" />
+              )}
+
+              <div className="relative px-7 pb-8">
                 {/* Avatar */}
-                <div className="-mt-14">
+                <div className="relative z-10 -mt-14 w-fit">
                   {profile?.avatar_url ? (
                     <img
                       src={
                         profile.avatar_url
                       }
-                      alt={displayName}
+                      alt={
+                        displayName
+                      }
                       className="h-28 w-28 rounded-full border-4 border-white object-cover shadow-lg"
                     />
                   ) : (
@@ -216,7 +268,9 @@ export default async function ProfilePage({
                 <div className="mt-5">
                   <div className="flex flex-wrap items-center gap-3">
                     <h2 className="font-serif text-3xl font-semibold text-slate-950">
-                      {displayName}
+                      {
+                        displayName
+                      }
                     </h2>
 
                     <AccountBadge
@@ -246,7 +300,9 @@ export default async function ProfilePage({
                   </p>
 
                   <p className="mt-2 text-sm font-semibold text-slate-800">
-                    {memberSince}
+                    {
+                      memberSince
+                    }
                   </p>
                 </div>
               </div>
@@ -262,12 +318,17 @@ export default async function ProfilePage({
                 </p>
 
                 <h2 className="mt-3 font-serif text-3xl font-semibold text-slate-950">
-                  Account Information
+                  Account
+                  Information
                 </h2>
 
                 <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Basic information connected to your
-                  7ICONS Digital Home account.
+                  Basic
+                  information
+                  connected to
+                  your 7ICONS
+                  Digital Home
+                  account.
                 </p>
               </div>
 
@@ -345,12 +406,18 @@ export default async function ProfilePage({
               {/* Profile Controls */}
               <div className="mt-8 rounded-2xl border border-violet-100 bg-[#faf8ff] p-5">
                 <p className="font-semibold text-slate-900">
-                  Personalize your profile
+                  Personalize your
+                  profile
                 </p>
 
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Update your full name, username, and bio.
-                  Profile picture support will be added next.
+                  Update your
+                  profile picture,
+                  background,
+                  background
+                  position, full
+                  name, username,
+                  and bio.
                 </p>
 
                 <Link

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import AvatarUploader from "@/components/profile/AvatarUploader";
+import ProfileBackgroundUploader from "@/components/profile/ProfileBackgroundUploader";
 import { createClient } from "@/lib/supabase/server";
 
 import { updateProfile } from "./actions";
@@ -17,48 +18,61 @@ type EditProfilePageProps = {
 export default async function EditProfilePage({
   searchParams,
 }: EditProfilePageProps) {
-  const { error } = await searchParams;
+  const { error } =
+    await searchParams;
 
-  const supabase = await createClient();
+  const supabase =
+    await createClient();
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } =
+    await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select(
-      `
-        username,
-        full_name,
-        bio,
-        avatar_url,
-        avatar_path
-      `,
-    )
-    .eq("id", user.id)
-    .single();
+  const {
+    data: profile,
+  } =
+    await supabase
+      .from("profiles")
+      .select(
+        `
+          username,
+          full_name,
+          bio,
+          avatar_url,
+          avatar_path,
+          background_url,
+          background_path
+        `,
+      )
+      .eq("id", user.id)
+      .single();
 
   const fullName =
     profile?.full_name ||
-    user.user_metadata?.full_name ||
+    user.user_metadata
+      ?.full_name ||
     "";
 
   const username =
     profile?.username ||
-    user.user_metadata?.username ||
+    user.user_metadata
+      ?.username ||
     "";
 
-  const bio = profile?.bio || "";
+  const bio =
+    profile?.bio || "";
 
   const displayName =
     fullName ||
     username ||
-    user.email?.split("@")[0] ||
+    user.email?.split(
+      "@",
+    )[0] ||
     "ICONIA Member";
 
   return (
@@ -83,7 +97,9 @@ export default async function EditProfilePage({
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-              Personalize how you appear inside the digital home of
+              Personalize how you
+              appear inside the
+              digital home of
               7ICONS & ICONIA.
             </p>
           </div>
@@ -117,12 +133,51 @@ export default async function EditProfilePage({
               <div className="mt-5">
                 <AvatarUploader
                   currentAvatarUrl={
-                    profile?.avatar_url ?? null
+                    profile?.avatar_url ??
+                    null
                   }
                   currentAvatarPath={
-                    profile?.avatar_path ?? null
+                    profile?.avatar_path ??
+                    null
                   }
-                  displayName={displayName}
+                  displayName={
+                    displayName
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="mb-9 h-px bg-violet-100" />
+
+            {/* =========================
+                PROFILE BACKGROUND
+            ========================= */}
+            <div className="mb-9">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600">
+                Profile Cover
+              </p>
+
+              <h2 className="mt-2 font-serif text-2xl font-semibold text-slate-950">
+                Your Background
+              </h2>
+
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                Personalize the
+                cover displayed at
+                the top of your
+                ICONIA profile.
+              </p>
+
+              <div className="mt-5">
+                <ProfileBackgroundUploader
+                  currentBackgroundUrl={
+                    profile?.background_url ??
+                    null
+                  }
+                  currentBackgroundPath={
+                    profile?.background_path ??
+                    null
+                  }
                 />
               </div>
             </div>
@@ -132,7 +187,12 @@ export default async function EditProfilePage({
             {/* =========================
                 PROFILE DATA
             ========================= */}
-            <form action={updateProfile} className="space-y-7">
+            <form
+              action={
+                updateProfile
+              }
+              className="space-y-7"
+            >
               {/* Full Name */}
               <div>
                 <label
@@ -143,7 +203,9 @@ export default async function EditProfilePage({
                 </label>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  This name will appear on your ICONIA profile.
+                  This name will
+                  appear on your
+                  ICONIA profile.
                 </p>
 
                 <input
@@ -152,7 +214,9 @@ export default async function EditProfilePage({
                   type="text"
                   required
                   maxLength={80}
-                  defaultValue={fullName}
+                  defaultValue={
+                    fullName
+                  }
                   autoComplete="name"
                   className="mt-3 w-full rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                 />
@@ -168,7 +232,9 @@ export default async function EditProfilePage({
                 </label>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  3–30 characters. Letters, numbers, and underscores
+                  3–30 characters.
+                  Letters, numbers,
+                  and underscores
                   only.
                 </p>
 
@@ -184,7 +250,9 @@ export default async function EditProfilePage({
                     required
                     minLength={3}
                     maxLength={30}
-                    defaultValue={username}
+                    defaultValue={
+                      username
+                    }
                     autoComplete="username"
                     className="w-full rounded-xl border border-violet-100 bg-white py-3.5 pl-9 pr-4 text-sm text-slate-900 outline-none transition focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                   />
@@ -201,8 +269,11 @@ export default async function EditProfilePage({
                 </label>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Tell other ICONIA members a little about yourself.
-                  Maximum 300 characters.
+                  Tell other ICONIA
+                  members a little
+                  about yourself.
+                  Maximum 300
+                  characters.
                 </p>
 
                 <textarea
@@ -210,7 +281,9 @@ export default async function EditProfilePage({
                   name="bio"
                   rows={6}
                   maxLength={300}
-                  defaultValue={bio}
+                  defaultValue={
+                    bio
+                  }
                   placeholder="Write something about yourself..."
                   className="mt-3 w-full resize-none rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                 />
@@ -223,7 +296,9 @@ export default async function EditProfilePage({
                 </label>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Email editing is handled separately for account
+                  Email editing is
+                  handled separately
+                  for account
                   security.
                 </p>
 
