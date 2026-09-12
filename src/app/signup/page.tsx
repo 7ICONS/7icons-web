@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
@@ -15,7 +16,8 @@ type SignUpPageProps = {
 export default async function SignUpPage({
   searchParams,
 }: SignUpPageProps) {
-  const { error, success } = await searchParams;
+  const { error, success } =
+    await searchParams;
 
   return (
     <>
@@ -44,12 +46,14 @@ export default async function SignUpPage({
                 </p>
 
                 <h1 className="mt-5 max-w-md font-serif text-4xl font-semibold leading-tight">
-                  Become part of the 7ICONS & ICONIA digital home.
+                  Become part of the 7ICONS &amp; ICONIA
+                  digital home.
                 </h1>
 
                 <p className="mt-6 max-w-md text-sm leading-7 text-white/75">
-                  Create an account to prepare for community features,
-                  personal activity, discussions, and future ways to stay
+                  Create an account to prepare for
+                  community features, personal activity,
+                  discussions, and future ways to stay
                   connected with the journey.
                 </p>
               </div>
@@ -61,7 +65,8 @@ export default async function SignUpPage({
                   </p>
 
                   <p className="mt-3 text-sm leading-6 text-white/70">
-                    Welcome to the digital home of 7ICONS & ICONIA.
+                    Welcome to the digital home of 7ICONS
+                    &amp; ICONIA.
                   </p>
                 </div>
               </div>
@@ -89,8 +94,8 @@ export default async function SignUpPage({
                 </h2>
 
                 <p className="mt-4 text-sm leading-7 text-slate-600">
-                  Create your account and become part of the digital home
-                  of 7ICONS and ICONIA.
+                  Create your account and become part of
+                  the digital home of 7ICONS and ICONIA.
                 </p>
               </div>
 
@@ -128,7 +133,10 @@ export default async function SignUpPage({
               )}
 
               {/* Form */}
-              <form action={signUp} className="mt-9 space-y-5">
+              <form
+                action={signUp}
+                className="mt-9 space-y-5"
+              >
                 {/* Full Name */}
                 <div>
                   <label
@@ -279,16 +287,7 @@ export default async function SignUpPage({
               </div>
 
               {/* Google */}
-              <button
-                type="button"
-                className="flex w-full items-center justify-center gap-3 rounded-xl border border-violet-100 bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50"
-              >
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-xs font-bold">
-                  G
-                </span>
-
-                Continue with Google
-              </button>
+              <GoogleAuthButton />
 
               {/* Login */}
               <p className="mt-8 text-center text-sm text-slate-500">

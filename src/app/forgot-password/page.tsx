@@ -3,7 +3,23 @@ import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
-export default function ForgotPasswordPage() {
+import { requestPasswordReset } from "./actions";
+
+type ForgotPasswordPageProps = {
+  searchParams: Promise<{
+    error?: string;
+    success?: string;
+  }>;
+};
+
+export default async function ForgotPasswordPage({
+  searchParams,
+}: ForgotPasswordPageProps) {
+  const {
+    error,
+    success,
+  } = await searchParams;
+
   return (
     <>
       <Navbar />
@@ -32,8 +48,9 @@ export default function ForgotPasswordPage() {
                 </h1>
 
                 <p className="mt-6 max-w-md text-sm leading-7 text-white/75">
-                  Enter the email connected to your account and we&apos;ll
-                  prepare a way for you to reset your password.
+                  Enter the email connected to your account
+                  and we&apos;ll send you a secure link to
+                  reset your password.
                 </p>
               </div>
 
@@ -44,7 +61,8 @@ export default function ForgotPasswordPage() {
                   </p>
 
                   <p className="mt-3 text-sm leading-6 text-white/70">
-                    Reconnect with your account whenever you&apos;re ready.
+                    Reconnect with your account whenever
+                    you&apos;re ready.
                   </p>
                 </div>
               </div>
@@ -69,12 +87,42 @@ export default function ForgotPasswordPage() {
                 </h2>
 
                 <p className="mt-4 text-sm leading-7 text-slate-600">
-                  Enter your account email and we&apos;ll send instructions
-                  for resetting your password.
+                  Enter your account email and we&apos;ll
+                  send instructions for resetting your
+                  password.
                 </p>
               </div>
 
-              <form className="mt-9">
+              {/* Error Message */}
+              {error && (
+                <div
+                  role="alert"
+                  aria-live="polite"
+                  className="mt-7 rounded-xl border border-red-200 bg-red-50 px-4 py-3"
+                >
+                  <p className="text-sm font-medium text-red-700">
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              {/* Success Message */}
+              {success && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="mt-7 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3"
+                >
+                  <p className="text-sm font-medium leading-6 text-emerald-700">
+                    {success}
+                  </p>
+                </div>
+              )}
+
+              <form
+                action={requestPasswordReset}
+                className="mt-9"
+              >
                 <div>
                   <label
                     htmlFor="email"
@@ -85,14 +133,17 @@ export default function ForgotPasswordPage() {
 
                   <input
                     id="email"
+                    name="email"
                     type="email"
+                    required
+                    autoComplete="email"
                     placeholder="you@example.com"
                     className="mt-2 w-full rounded-xl border border-violet-100 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
                   />
                 </div>
 
                 <button
-                  type="button"
+                  type="submit"
                   className="mt-6 w-full rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:-translate-y-0.5 hover:shadow-xl"
                 >
                   Send Reset Instructions
@@ -106,9 +157,11 @@ export default function ForgotPasswordPage() {
                 </p>
 
                 <p className="mt-2 text-sm leading-6 text-slate-500">
-                  When account recovery becomes active, a secure reset
-                  link will be sent to the email associated with your
-                  account.
+                  If the email belongs to an existing
+                  account, you&apos;ll receive a secure
+                  password reset link. For privacy, we
+                  won&apos;t confirm whether an email is
+                  registered.
                 </p>
               </div>
 
@@ -120,15 +173,6 @@ export default function ForgotPasswordPage() {
                 >
                   ← Back to Sign In
                 </Link>
-              </div>
-
-              {/* UI Notice */}
-              <div className="mt-8 rounded-2xl border border-violet-100 bg-white px-5 py-4">
-                <p className="text-center text-xs leading-6 text-slate-500">
-                  Password recovery is not active yet. This page
-                  currently serves as the visual interface for the
-                  upcoming account system.
-                </p>
               </div>
             </div>
           </div>

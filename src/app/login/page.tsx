@@ -4,6 +4,7 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
 import { login } from "./actions";
+import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 
 type LoginPageProps = {
   searchParams: Promise<{
@@ -185,16 +186,7 @@ export default async function LoginPage({
               </div>
 
               {/* Google Placeholder */}
-              <button
-                type="button"
-                className="flex w-full items-center justify-center gap-3 rounded-xl border border-violet-100 bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50"
-              >
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-xs font-bold">
-                  G
-                </span>
-
-                Continue with Google
-              </button>
+              <GoogleAuthButton />
 
               {/* Signup */}
               <p className="mt-8 text-center text-sm text-slate-500">
