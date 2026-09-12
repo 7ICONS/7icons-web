@@ -11,12 +11,16 @@ const exploreLinks = [
     href: "/members",
   },
   {
+    label: "Gallery",
+    href: "/gallery",
+  },
+  {
     label: "Fan Representatives",
     href: "/fan-representatives",
   },
   {
-    label: "Archive",
-    href: "/archive",
+    label: "About",
+    href: "/about",
   },
 ];
 
@@ -29,14 +33,6 @@ const communityLinks = [
     label: "Community Guidelines",
     href: "/guidelines",
   },
-  {
-    label: "FAQ",
-    href: "/faq",
-  },
-  {
-    label: "About",
-    href: "/about",
-  },
 ];
 
 const accountLinks = [
@@ -45,16 +41,8 @@ const accountLinks = [
     href: "/profile",
   },
   {
-    label: "Bookmarks",
-    href: "/bookmarks",
-  },
-  {
-    label: "My Comments",
-    href: "/profile/comments",
-  },
-  {
-    label: "Settings",
-    href: "/settings",
+    label: "Edit Profile",
+    href: "/profile/edit",
   },
 ];
 
@@ -188,12 +176,20 @@ export default function Footer() {
       {/* Bottom Footer */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-5 py-6 text-center text-xs text-violet-100/50 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10">
-          <p>© 2026 7ICONS. All rights reserved.</p>
+          <p>
+            © 2026 7ICONS. All rights reserved.
+          </p>
 
           <p>
             Built for{" "}
-            <span className="font-semibold text-violet-300">ICONIA</span>, by{" "}
-            <span className="font-semibold text-violet-300">ICONIA</span>. 💜
+            <span className="font-semibold text-violet-300">
+              ICONIA
+            </span>
+            , by{" "}
+            <span className="font-semibold text-violet-300">
+              ICONIA
+            </span>
+            . 💜
           </p>
         </div>
       </div>
