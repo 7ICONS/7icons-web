@@ -1,6 +1,10 @@
 import Link from "next/link";
+
 import { redirect } from "next/navigation";
 
+import AccountBadge, {
+  type AccountBadgeType,
+} from "@/components/account/AccountBadge";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import { createClient } from "@/lib/supabase/server";
@@ -10,6 +14,35 @@ type ProfilePageProps = {
     success?: string;
   }>;
 };
+
+type PublicAccountBadgeRow = {
+  user_id: string;
+  badge: string;
+};
+
+const validAccountBadges: AccountBadgeType[] = [
+  "member",
+  "representative",
+  "moderator",
+  "editor",
+  "admin",
+  "super_admin",
+];
+
+function resolveAccountBadge(
+  value?: string | null,
+): AccountBadgeType {
+  if (
+    value &&
+    validAccountBadges.includes(
+      value as AccountBadgeType,
+    )
+  ) {
+    return value as AccountBadgeType;
+  }
+
+  return "member";
+}
 
 export default async function ProfilePage({
   searchParams,
@@ -26,20 +59,53 @@ export default async function ProfilePage({
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select(
-      `
-        username,
-        full_name,
-        avatar_url,
-        bio,
-        created_at,
-        updated_at
-      `,
-    )
-    .eq("id", user.id)
-    .single();
+  const [
+    { data: profile },
+    { data: badgeRows, error: badgeError },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select(
+        `
+          username,
+          full_name,
+          avatar_url,
+          bio,
+          created_at,
+          updated_at
+        `,
+      )
+      .eq("id", user.id)
+      .single(),
+
+    supabase.rpc(
+      "get_public_account_badges",
+      {
+        target_user_ids: [user.id],
+      },
+    ),
+  ]);
+
+  if (badgeError) {
+    console.error(
+      "Unable to load account badge:",
+      badgeError,
+    );
+  }
+
+  const publicBadges =
+    Array.isArray(badgeRows)
+      ? (badgeRows as PublicAccountBadgeRow[])
+      : [];
+
+  const badgeRow = publicBadges.find(
+    (item) => item.user_id === user.id,
+  );
+
+  const accountBadge =
+    resolveAccountBadge(
+      badgeRow?.badge,
+    );
 
   const displayName =
     profile?.full_name ||
@@ -52,14 +118,25 @@ export default async function ProfilePage({
     user.user_metadata?.username ||
     "member";
 
-  const initial = displayName.charAt(0).toUpperCase();
+  const initial =
+    displayName
+      .charAt(0)
+      .toUpperCase();
 
-  const memberSince = profile?.created_at
-    ? new Intl.DateTimeFormat("en-US", {
-        month: "long",
-        year: "numeric",
-      }).format(new Date(profile.created_at))
-    : "Unknown";
+  const memberSince =
+    profile?.created_at
+      ? new Intl.DateTimeFormat(
+          "en-US",
+          {
+            month: "long",
+            year: "numeric",
+          },
+        ).format(
+          new Date(
+            profile.created_at,
+          ),
+        )
+      : "Unknown";
 
   return (
     <>
@@ -68,7 +145,6 @@ export default async function ProfilePage({
       <main className="relative min-h-screen overflow-hidden bg-[#faf8ff]">
         {/* Background Decorations */}
         <div className="pointer-events-none absolute -left-40 top-20 h-[420px] w-[420px] rounded-full bg-violet-300/20 blur-3xl" />
-
         <div className="pointer-events-none absolute -right-40 top-72 h-[460px] w-[460px] rounded-full bg-purple-300/20 blur-3xl" />
 
         <section className="relative mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
@@ -84,8 +160,8 @@ export default async function ProfilePage({
               </h1>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                Your personal space inside the digital home of 7ICONS &
-                ICONIA.
+                Your personal space inside the digital home
+                of 7ICONS & ICONIA.
               </p>
             </div>
 
@@ -123,7 +199,9 @@ export default async function ProfilePage({
                 <div className="-mt-14">
                   {profile?.avatar_url ? (
                     <img
-                      src={profile.avatar_url}
+                      src={
+                        profile.avatar_url
+                      }
                       alt={displayName}
                       className="h-28 w-28 rounded-full border-4 border-white object-cover shadow-lg"
                     />
@@ -136,9 +214,17 @@ export default async function ProfilePage({
 
                 {/* Identity */}
                 <div className="mt-5">
-                  <h2 className="font-serif text-3xl font-semibold text-slate-950">
-                    {displayName}
-                  </h2>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h2 className="font-serif text-3xl font-semibold text-slate-950">
+                      {displayName}
+                    </h2>
+
+                    <AccountBadge
+                      badge={
+                        accountBadge
+                      }
+                    />
+                  </div>
 
                   <p className="mt-1 text-sm font-semibold text-violet-600">
                     @{username}
@@ -180,8 +266,8 @@ export default async function ProfilePage({
                 </h2>
 
                 <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Basic information connected to your 7ICONS Digital
-                  Home account.
+                  Basic information connected to your
+                  7ICONS Digital Home account.
                 </p>
               </div>
 
@@ -193,7 +279,8 @@ export default async function ProfilePage({
                   </p>
 
                   <p className="mt-2 font-medium text-slate-900">
-                    {profile?.full_name || "Not set"}
+                    {profile?.full_name ||
+                      "Not set"}
                   </p>
                 </div>
 
@@ -206,6 +293,21 @@ export default async function ProfilePage({
                   <p className="mt-2 font-medium text-slate-900">
                     @{username}
                   </p>
+                </div>
+
+                {/* Account Badge */}
+                <div className="py-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+                    Account Badge
+                  </p>
+
+                  <div className="mt-2">
+                    <AccountBadge
+                      badge={
+                        accountBadge
+                      }
+                    />
+                  </div>
                 </div>
 
                 {/* Email */}
@@ -232,7 +334,8 @@ export default async function ProfilePage({
                       </span>
                     ) : (
                       <span className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
-                        Verification Required
+                        Verification
+                        Required
                       </span>
                     )}
                   </div>
@@ -246,8 +349,8 @@ export default async function ProfilePage({
                 </p>
 
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Update your full name, username, and bio. Profile
-                  picture support will be added next.
+                  Update your full name, username, and bio.
+                  Profile picture support will be added next.
                 </p>
 
                 <Link

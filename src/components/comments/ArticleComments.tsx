@@ -10,6 +10,10 @@ import {
 } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 
+import AccountBadge, {
+  type AccountBadgeType,
+} from "@/components/account/AccountBadge";
+
 type PublicComment = {
   id: string;
   parent_id: string | null;
@@ -17,11 +21,36 @@ type PublicComment = {
   created_at: string;
   author_name: string;
   is_representative: boolean;
+  account_badge: string | null;
 };
 
 type ArticleCommentsProps = {
   articleId: string;
 };
+
+const validAccountBadges: AccountBadgeType[] = [
+  "member",
+  "representative",
+  "moderator",
+  "editor",
+  "admin",
+  "super_admin",
+];
+
+function resolveAccountBadge(
+  value?: string | null,
+): AccountBadgeType {
+  if (
+    value &&
+    validAccountBadges.includes(
+      value as AccountBadgeType,
+    )
+  ) {
+    return value as AccountBadgeType;
+  }
+
+  return "member";
+}
 
 function formatCommentDate(
   dateString: string,
@@ -547,11 +576,20 @@ export default function ArticleComments({
                           </div>
 
                           <div>
-                            <p className="text-sm font-bold text-slate-900">
-                              {
-                                comment.author_name
-                              }
-                            </p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-sm font-bold text-slate-900">
+                                {
+                                  comment.author_name
+                                }
+                              </p>
+
+                              <AccountBadge
+                                badge={resolveAccountBadge(
+                                  comment.account_badge,
+                                )}
+                                className="px-2 py-0.5 text-[10px] uppercase tracking-wider"
+                              />
+                            </div>
 
                             <p className="mt-0.5 text-xs text-slate-400">
                               {formatCommentDate(
@@ -598,11 +636,12 @@ export default function ArticleComments({
                                         }
                                       </p>
 
-                                      {reply.is_representative && (
-                                        <span className="rounded-full bg-violet-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
-                                          ICONIA Representative
-                                        </span>
-                                      )}
+                                      <AccountBadge
+                                        badge={resolveAccountBadge(
+                                          reply.account_badge,
+                                        )}
+                                        className="px-2 py-0.5 text-[10px] uppercase tracking-wider"
+                                      />
                                     </div>
 
                                     <p className="mt-0.5 text-xs text-slate-400">
