@@ -3,8 +3,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
-  const requestUrl =
-    new URL(request.url);
+  const requestUrl = new URL(request.url);
 
   const code =
     requestUrl.searchParams.get("code");
@@ -29,27 +28,20 @@ export async function GET(request: Request) {
     );
   }
 
-  const supabase =
-    await createClient();
+  const supabase = await createClient();
 
-  const { error } =
+  const { error: exchangeError } =
     await supabase.auth.exchangeCodeForSession(
       code,
     );
 
-  if (error) {
+  if (exchangeError) {
     console.error(
       "Auth callback failed:",
-      error,
+      exchangeError,
     );
 
-    /*
-     * Recovery flow mendapatkan pesan
-     * yang lebih relevan.
-     */
-    if (
-      next === "/reset-password"
-    ) {
+    if (next === "/reset-password") {
       return NextResponse.redirect(
         new URL(
           `/forgot-password?error=${encodeURIComponent(
@@ -71,12 +63,9 @@ export async function GET(request: Request) {
   }
 
   /*
-   * Password recovery harus tetap langsung
-   * menuju halaman reset password.
+   * Password recovery memiliki flow sendiri.
    */
-  if (
-    next === "/reset-password"
-  ) {
+  if (next === "/reset-password") {
     return NextResponse.redirect(
       new URL(
         "/reset-password",
@@ -86,40 +75,140 @@ export async function GET(request: Request) {
   }
 
   /*
-   * Untuk login/signup normal, cek apakah
-   * profile sudah memiliki username.
+   * Semua OAuth login normal harus melalui
+   * moderation check.
    */
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
 
-  if (user) {
-    const {
-      data: profile,
-      error: profileError,
-    } = await supabase
-      .from("profiles")
-      .select("username")
-      .eq("id", user.id)
-      .maybeSingle();
+  if (userError || !user) {
+    await supabase.auth.signOut({
+      scope: "local",
+    });
 
-    if (profileError) {
-      console.error(
-        "Unable to check OAuth profile:",
-        profileError,
-      );
-    }
+    return NextResponse.redirect(
+      new URL(
+        `/login?error=${encodeURIComponent(
+          "Unable to verify your account. Please try again.",
+        )}`,
+        requestUrl.origin,
+      ),
+    );
+  }
 
-    if (
-      !profile?.username
-    ) {
-      return NextResponse.redirect(
-        new URL(
-          "/onboarding/username",
-          requestUrl.origin,
-        ),
-      );
-    }
+  const {
+    data: userProfile,
+    error: statusError,
+  } = await supabase
+    .from("user_profiles")
+    .select("status")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (
+    statusError ||
+    !userProfile
+  ) {
+    console.error(
+      "Unable to verify OAuth account status:",
+      statusError,
+    );
+
+    await supabase.auth.signOut({
+      scope: "local",
+    });
+
+    return NextResponse.redirect(
+      new URL(
+        `/login?error=${encodeURIComponent(
+          "Unable to verify your account status. Please try again.",
+        )}`,
+        requestUrl.origin,
+      ),
+    );
+  }
+
+  /*
+   * BANNED
+   *
+   * Session diputus sepenuhnya lalu status
+   * dikirim melalui query parameter agar
+   * account-restricted bisa menampilkan
+   * tampilan banned.
+   */
+  if (userProfile.status === "banned") {
+    await supabase.auth.signOut();
+
+    return NextResponse.redirect(
+      new URL(
+        "/account-restricted?status=banned",
+        requestUrl.origin,
+      ),
+    );
+  }
+
+  /*
+   * SUSPENDED
+   *
+   * Session tetap aktif supaya user masih
+   * dapat browse, tetapi diarahkan ke halaman
+   * restricted dengan tampilan suspended.
+   */
+  if (
+    userProfile.status === "suspended"
+  ) {
+    return NextResponse.redirect(
+      new URL(
+        "/account-restricted?status=suspended",
+        requestUrl.origin,
+      ),
+    );
+  }
+
+  if (userProfile.status !== "active") {
+    await supabase.auth.signOut({
+      scope: "local",
+    });
+
+    return NextResponse.redirect(
+      new URL(
+        `/login?error=${encodeURIComponent(
+          "Your account status could not be verified.",
+        )}`,
+        requestUrl.origin,
+      ),
+    );
+  }
+
+  /*
+   * Setelah moderation lolos,
+   * periksa username onboarding.
+   */
+  const {
+    data: profile,
+    error: profileError,
+  } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    console.error(
+      "Unable to check OAuth profile:",
+      profileError,
+    );
+  }
+
+  if (!profile?.username) {
+    return NextResponse.redirect(
+      new URL(
+        "/onboarding/username",
+        requestUrl.origin,
+      ),
+    );
   }
 
   return NextResponse.redirect(
