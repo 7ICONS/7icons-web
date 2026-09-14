@@ -3,9 +3,17 @@
 import type { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import {
+  usePathname,
+  useRouter,
+} from "next/navigation";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
+import UserNotifications from "@/components/layout/UserNotifications";
 import { createClient } from "@/lib/supabase/client";
 
 type Profile = {
@@ -45,17 +53,40 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const supabase = useMemo(() => createClient(), []);
+  const supabase =
+    useMemo(
+      () => createClient(),
+      [],
+    );
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [
+    mobileMenuOpen,
+    setMobileMenuOpen,
+  ] = useState(false);
 
-  const [user, setUser] = useState<User | null>(null);
+  const [
+    user,
+    setUser,
+  ] = useState<User | null>(
+    null,
+  );
 
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [
+    profile,
+    setProfile,
+  ] = useState<Profile | null>(
+    null,
+  );
 
-  const [authLoading, setAuthLoading] = useState(true);
+  const [
+    authLoading,
+    setAuthLoading,
+  ] = useState(true);
 
-  const [logoutLoading, setLogoutLoading] = useState(false);
+  const [
+    logoutLoading,
+    setLogoutLoading,
+  ] = useState(false);
 
   /*
    * =========================================================
@@ -67,40 +98,66 @@ export default function Navbar() {
 
     async function loadUser() {
       const {
-        data: { user: currentUser },
-      } = await supabase.auth.getUser();
+        data: {
+          user: currentUser,
+        },
+      } =
+        await supabase.auth.getUser();
 
       if (!mounted) {
         return;
       }
 
-      setUser(currentUser);
+      setUser(
+        currentUser,
+      );
+
       setAuthLoading(false);
     }
 
-    loadUser();
+    void loadUser();
 
     const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!mounted) {
-        return;
-      }
+      data: {
+        subscription,
+      },
+    } =
+      supabase.auth.onAuthStateChange(
+        (
+          _event,
+          session,
+        ) => {
+          if (!mounted) {
+            return;
+          }
 
-      setUser(session?.user ?? null);
-      setAuthLoading(false);
+          setUser(
+            session?.user ??
+              null,
+          );
 
-      if (!session?.user) {
-        setProfile(null);
-      }
-    });
+          setAuthLoading(
+            false,
+          );
+
+          if (
+            !session?.user
+          ) {
+            setProfile(
+              null,
+            );
+          }
+        },
+      );
 
     return () => {
       mounted = false;
 
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [
+    supabase,
+  ]);
 
   /*
    * =========================================================
@@ -112,56 +169,81 @@ export default function Navbar() {
 
     async function loadProfile() {
       if (!user) {
-        setProfile(null);
+        setProfile(
+          null,
+        );
 
         return;
       }
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select(
-          `
-            username,
-            full_name,
-            avatar_url
-          `,
-        )
-        .eq("id", user.id)
-        .single();
+      const {
+        data,
+        error,
+      } =
+        await supabase
+          .from(
+            "profiles",
+          )
+          .select(
+            `
+              username,
+              full_name,
+              avatar_url
+            `,
+          )
+          .eq(
+            "id",
+            user.id,
+          )
+          .single();
 
       if (!mounted) {
         return;
       }
 
       if (error) {
-        console.error("Navbar profile error:", error);
+        console.error(
+          "Navbar profile error:",
+          error,
+        );
 
-        setProfile(null);
+        setProfile(
+          null,
+        );
 
         return;
       }
 
-      setProfile(data);
+      setProfile(
+        data,
+      );
     }
 
-    loadProfile();
+    void loadProfile();
 
     return () => {
       mounted = false;
     };
-  }, [supabase, user]);
+  }, [
+    supabase,
+    user,
+  ]);
 
   /*
    * =========================================================
    * ACTIVE NAVIGATION
    * =========================================================
    */
-  const isActive = (href: string) => {
+  const isActive = (
+    href: string,
+  ) => {
     if (href === "/") {
       return pathname === "/";
     }
 
-    return pathname.startsWith(href);
+    return pathname.startsWith(
+      href,
+    );
   };
 
   /*
@@ -172,47 +254,74 @@ export default function Navbar() {
   const displayName =
     profile?.username ||
     profile?.full_name ||
-    user?.user_metadata?.username ||
-    user?.user_metadata?.full_name ||
-    user?.email?.split("@")[0] ||
+    user?.user_metadata
+      ?.username ||
+    user?.user_metadata
+      ?.full_name ||
+    user?.email?.split(
+      "@",
+    )[0] ||
     "Account";
 
   const avatarUrl =
     profile?.avatar_url ||
-    user?.user_metadata?.avatar_url ||
+    user?.user_metadata
+      ?.avatar_url ||
     null;
 
   const initial =
-    displayName.trim().charAt(0).toUpperCase() || "I";
+    displayName
+      .trim()
+      .charAt(0)
+      .toUpperCase() ||
+    "I";
 
   /*
    * =========================================================
    * LOGOUT
    * =========================================================
    */
-  const handleLogout = async () => {
-    setLogoutLoading(true);
+  const handleLogout =
+    async () => {
+      setLogoutLoading(
+        true,
+      );
 
-    const { error } = await supabase.auth.signOut();
+      const {
+        error,
+      } =
+        await supabase.auth.signOut();
 
-    if (error) {
-      console.error("Logout error:", error);
+      if (error) {
+        console.error(
+          "Logout error:",
+          error,
+        );
 
-      alert("Unable to sign out. Please try again.");
+        alert(
+          "Unable to sign out. Please try again.",
+        );
 
-      setLogoutLoading(false);
+        setLogoutLoading(
+          false,
+        );
 
-      return;
-    }
+        return;
+      }
 
-    setUser(null);
-    setProfile(null);
-    setMobileMenuOpen(false);
-    setLogoutLoading(false);
+      setUser(null);
+      setProfile(null);
+      setMobileMenuOpen(
+        false,
+      );
 
-    router.push("/");
-    router.refresh();
-  };
+      setLogoutLoading(
+        false,
+      );
+
+      router.push("/");
+      router.refresh();
+    };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md">
@@ -239,27 +348,38 @@ export default function Navbar() {
             DESKTOP NAVIGATION
         ========================= */}
         <div className="hidden items-center gap-8 lg:flex">
-          {navItems.map((item) => {
-            const active = isActive(item.href);
+          {navItems.map(
+            (item) => {
+              const active =
+                isActive(
+                  item.href,
+                );
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative py-7 text-sm font-medium transition-colors duration-200 ${
-                  active
-                    ? "text-violet-600"
-                    : "text-slate-800 hover:text-violet-600"
-                }`}
-              >
-                {item.label}
+              return (
+                <Link
+                  key={
+                    item.href
+                  }
+                  href={
+                    item.href
+                  }
+                  className={`relative py-7 text-sm font-medium transition-colors duration-200 ${
+                    active
+                      ? "text-violet-600"
+                      : "text-slate-800 hover:text-violet-600"
+                  }`}
+                >
+                  {
+                    item.label
+                  }
 
-                {active && (
-                  <span className="absolute inset-x-0 bottom-4 mx-auto h-0.5 w-full rounded-full bg-violet-500" />
-                )}
-              </Link>
-            );
-          })}
+                  {active && (
+                    <span className="absolute inset-x-0 bottom-4 mx-auto h-0.5 w-full rounded-full bg-violet-500" />
+                  )}
+                </Link>
+              );
+            },
+          )}
         </div>
 
         {/* =========================
@@ -279,7 +399,11 @@ export default function Navbar() {
               stroke="currentColor"
               strokeWidth="1.8"
             >
-              <circle cx="11" cy="11" r="7" />
+              <circle
+                cx="11"
+                cy="11"
+                r="7"
+              />
 
               <path d="m20 20-4-4" />
             </svg>
@@ -297,6 +421,13 @@ export default function Navbar() {
                 LOGGED IN
             ========================= */
             <div className="flex items-center gap-3">
+              {/* Notifications */}
+              <UserNotifications
+                userId={
+                  user.id
+                }
+              />
+
               {/* Profile Button */}
               <Link
                 href="/profile"
@@ -305,20 +436,28 @@ export default function Navbar() {
                 {/* Avatar */}
                 {avatarUrl ? (
                   <img
-                    src={avatarUrl}
-                    alt={displayName}
+                    src={
+                      avatarUrl
+                    }
+                    alt={
+                      displayName
+                    }
                     className="h-8 w-8 shrink-0 rounded-full object-cover"
                   />
                 ) : (
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-700 to-purple-500 text-sm font-bold text-white">
-                    {initial}
+                    {
+                      initial
+                    }
                   </div>
                 )}
 
                 {/* Username */}
                 <div className="max-w-32">
                   <p className="truncate text-sm font-semibold text-slate-900">
-                    {displayName}
+                    {
+                      displayName
+                    }
                   </p>
                 </div>
               </Link>
@@ -326,8 +465,12 @@ export default function Navbar() {
               {/* Logout */}
               <button
                 type="button"
-                onClick={handleLogout}
-                disabled={logoutLoading}
+                onClick={
+                  handleLogout
+                }
+                disabled={
+                  logoutLoading
+                }
                 className="rounded-xl border border-violet-200 px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {logoutLoading
@@ -363,9 +506,14 @@ export default function Navbar() {
         <button
           type="button"
           aria-label="Toggle navigation menu"
-          aria-expanded={mobileMenuOpen}
+          aria-expanded={
+            mobileMenuOpen
+          }
           onClick={() =>
-            setMobileMenuOpen((current) => !current)
+            setMobileMenuOpen(
+              (current) =>
+                !current,
+            )
           }
           className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-900 transition hover:bg-violet-50 hover:text-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 lg:hidden"
         >
@@ -406,32 +554,47 @@ export default function Navbar() {
         <div className="border-t border-gray-100 bg-white px-5 pb-6 pt-3 shadow-lg lg:hidden">
           <div className="mx-auto flex max-w-[1440px] flex-col">
             {/* Navigation */}
-            {navItems.map((item) => {
-              const active = isActive(item.href);
+            {navItems.map(
+              (item) => {
+                const active =
+                  isActive(
+                    item.href,
+                  );
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() =>
-                    setMobileMenuOpen(false)
-                  }
-                  className={`border-b border-gray-100 px-3 py-4 text-base font-medium transition ${
-                    active
-                      ? "bg-violet-50 text-violet-600"
-                      : "text-slate-800 hover:bg-violet-50 hover:text-violet-600"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+                return (
+                  <Link
+                    key={
+                      item.href
+                    }
+                    href={
+                      item.href
+                    }
+                    onClick={() =>
+                      setMobileMenuOpen(
+                        false,
+                      )
+                    }
+                    className={`border-b border-gray-100 px-3 py-4 text-base font-medium transition ${
+                      active
+                        ? "bg-violet-50 text-violet-600"
+                        : "text-slate-800 hover:bg-violet-50 hover:text-violet-600"
+                    }`}
+                  >
+                    {
+                      item.label
+                    }
+                  </Link>
+                );
+              },
+            )}
 
             {/* Search */}
             <Link
               href="/search"
               onClick={() =>
-                setMobileMenuOpen(false)
+                setMobileMenuOpen(
+                  false,
+                )
               }
               className="mt-4 flex items-center gap-3 rounded-xl border border-violet-100 px-4 py-3 text-base font-medium text-slate-800 transition hover:bg-violet-50 hover:text-violet-600"
             >
@@ -442,7 +605,11 @@ export default function Navbar() {
                 stroke="currentColor"
                 strokeWidth="1.8"
               >
-                <circle cx="11" cy="11" r="7" />
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="7"
+                />
 
                 <path d="m20 20-4-4" />
               </svg>
@@ -458,35 +625,55 @@ export default function Navbar() {
             ) : user ? (
               /* Logged In */
               <div className="mt-5 space-y-3">
+                {/* Notifications */}
+                <UserNotifications
+                  userId={
+                    user.id
+                  }
+                  variant="mobile"
+                />
+
                 {/* Profile */}
                 <Link
                   href="/profile"
                   onClick={() =>
-                    setMobileMenuOpen(false)
+                    setMobileMenuOpen(
+                      false,
+                    )
                   }
                   className="flex items-center gap-3 rounded-xl border border-violet-100 bg-violet-50 px-4 py-3 transition hover:border-violet-200 hover:bg-violet-100"
                 >
                   {/* Avatar */}
                   {avatarUrl ? (
                     <img
-                      src={avatarUrl}
-                      alt={displayName}
+                      src={
+                        avatarUrl
+                      }
+                      alt={
+                        displayName
+                      }
                       className="h-10 w-10 shrink-0 rounded-full object-cover"
                     />
                   ) : (
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-700 to-purple-500 font-bold text-white">
-                      {initial}
+                      {
+                        initial
+                      }
                     </div>
                   )}
 
                   {/* Identity */}
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-slate-900">
-                      {displayName}
+                      {
+                        displayName
+                      }
                     </p>
 
                     <p className="truncate text-xs text-slate-500">
-                      {user.email}
+                      {
+                        user.email
+                      }
                     </p>
                   </div>
                 </Link>
@@ -494,8 +681,12 @@ export default function Navbar() {
                 {/* Logout */}
                 <button
                   type="button"
-                  onClick={handleLogout}
-                  disabled={logoutLoading}
+                  onClick={
+                    handleLogout
+                  }
+                  disabled={
+                    logoutLoading
+                  }
                   className="flex w-full items-center justify-center rounded-xl border border-violet-200 px-4 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {logoutLoading
@@ -509,7 +700,9 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   onClick={() =>
-                    setMobileMenuOpen(false)
+                    setMobileMenuOpen(
+                      false,
+                    )
                   }
                   className="flex items-center justify-center rounded-xl border border-violet-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-700"
                 >
@@ -519,7 +712,9 @@ export default function Navbar() {
                 <Link
                   href="/signup"
                   onClick={() =>
-                    setMobileMenuOpen(false)
+                    setMobileMenuOpen(
+                      false,
+                    )
                   }
                   className="flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-700 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-violet-500/15"
                 >

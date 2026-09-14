@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -10,6 +11,7 @@ import type { GalleryAlbum } from "@/lib/gallery";
 
 type GalleryLightboxProps = {
   album: GalleryAlbum | null;
+  focusCommentId?: string | null;
   onClose: () => void;
 };
 
@@ -60,6 +62,7 @@ function isFormElement(
 
 export default function GalleryLightbox({
   album,
+  focusCommentId,
   onClose,
 }: GalleryLightboxProps) {
   const [
@@ -67,10 +70,25 @@ export default function GalleryLightbox({
     setActivePhotoIndex,
   ] = useState(0);
 
+  const asideRef =
+    useRef<HTMLElement | null>(
+      null,
+    );
+
+  /*
+   * =========================================================
+   * RESET PHOTO
+   * =========================================================
+   */
   useEffect(() => {
     setActivePhotoIndex(0);
   }, [album?.id]);
 
+  /*
+   * =========================================================
+   * BODY LOCK + KEYBOARD
+   * =========================================================
+   */
   useEffect(() => {
     if (!album) {
       return;
@@ -171,6 +189,142 @@ export default function GalleryLightbox({
   }, [
     album,
     onClose,
+  ]);
+
+  /*
+   * =========================================================
+   * FOCUS COMMENT FROM PROFILE
+   * =========================================================
+   */
+  useEffect(() => {
+    if (
+      !album ||
+      !focusCommentId
+    ) {
+      return;
+    }
+
+    /*
+     * Simpan ID sebagai string murni
+     * supaya TypeScript tahu nilainya
+     * tidak null di dalam closure.
+     */
+    const targetCommentId: string =
+      focusCommentId;
+
+    let hasFocused =
+      false;
+
+    function focusComment() {
+      if (hasFocused) {
+        return true;
+      }
+
+      /*
+       * Ambil ref langsung di sini.
+       * Null-check berada di scope
+       * yang sama dengan penggunaannya.
+       */
+      const asideElement =
+        asideRef.current;
+
+      if (!asideElement) {
+        return false;
+      }
+
+      const target =
+        document.getElementById(
+          `comment-${targetCommentId}`,
+        );
+
+      if (!target) {
+        return false;
+      }
+
+      if (
+        !asideElement.contains(
+          target,
+        )
+      ) {
+        return false;
+      }
+
+      hasFocused =
+        true;
+
+      window.requestAnimationFrame(
+        () => {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        },
+      );
+
+      return true;
+    }
+
+    /*
+     * Comment mungkin sudah ada
+     * ketika effect dijalankan.
+     */
+    if (focusComment()) {
+      return;
+    }
+
+    /*
+     * GalleryComments memuat data
+     * secara asynchronous.
+     */
+    const observerRoot =
+      asideRef.current;
+
+    if (!observerRoot) {
+      return;
+    }
+
+    const observer =
+      new MutationObserver(
+        () => {
+          if (
+            focusComment()
+          ) {
+            observer.disconnect();
+          }
+        },
+      );
+
+    observer.observe(
+      observerRoot,
+      {
+        childList: true,
+        subtree: true,
+      },
+    );
+
+    /*
+     * Jangan biarkan observer
+     * berjalan selamanya apabila
+     * comment sudah dihapus/hidden.
+     */
+    const timeout =
+      window.setTimeout(
+        () => {
+          observer.disconnect();
+        },
+        10000,
+      );
+
+    return () => {
+      observer.disconnect();
+
+      window.clearTimeout(
+        timeout,
+      );
+    };
+  }, [
+    album,
+    focusCommentId,
   ]);
 
   if (!album) {
@@ -372,7 +526,12 @@ export default function GalleryLightbox({
         </div>
 
         {/* Album Information */}
-        <aside className="overflow-y-auto bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:max-h-[94vh]">
+        <aside
+          ref={
+            asideRef
+          }
+          className="overflow-y-auto bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:max-h-[94vh]"
+        >
           {/* Album Details */}
           <div className="px-6 py-7 sm:px-8 lg:px-7 lg:py-8">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-600">
