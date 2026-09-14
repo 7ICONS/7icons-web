@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
@@ -17,6 +16,9 @@ export async function completeUsernameOnboarding(
   const usernamePattern =
     /^[a-z0-9_]{3,30}$/;
 
+  /**
+   * Username required
+   */
   if (!username) {
     redirect(
       `/onboarding/username?error=${encodeURIComponent(
@@ -25,6 +27,9 @@ export async function completeUsernameOnboarding(
     );
   }
 
+  /**
+   * Username format
+   */
   if (!usernamePattern.test(username)) {
     redirect(
       `/onboarding/username?error=${encodeURIComponent(
@@ -36,6 +41,9 @@ export async function completeUsernameOnboarding(
   const supabase =
     await createClient();
 
+  /**
+   * Verify authenticated user
+   */
   const {
     data: { user },
     error: userError,
@@ -45,8 +53,9 @@ export async function completeUsernameOnboarding(
     redirect("/login");
   }
 
-  /*
-   * Pastikan user memang masih membutuhkan onboarding.
+  /**
+   * Check whether onboarding is
+   * already complete.
    */
   const {
     data: currentProfile,
@@ -74,8 +83,8 @@ export async function completeUsernameOnboarding(
     redirect("/");
   }
 
-  /*
-   * Gunakan RPC yang sama dengan signup normal.
+  /**
+   * Check username availability
    */
   const {
     data: usernameExists,
@@ -108,6 +117,12 @@ export async function completeUsernameOnboarding(
     );
   }
 
+  /**
+   * Save username.
+   *
+   * public.profiles is the source of truth
+   * for the user's public account identity.
+   */
   const { error: updateError } =
     await supabase
       .from("profiles")
@@ -129,25 +144,11 @@ export async function completeUsernameOnboarding(
     );
   }
 
-  /*
-   * Sinkronkan ke Auth metadata juga.
-   * profiles tetap menjadi sumber utama.
+  /**
+   * Onboarding complete.
+   *
+   * Redirect immediately after the profile
+   * has been successfully updated.
    */
-  const { error: metadataError } =
-    await supabase.auth.updateUser({
-      data: {
-        username,
-      },
-    });
-
-  if (metadataError) {
-    console.error(
-      "Unable to sync username metadata:",
-      metadataError,
-    );
-  }
-
-  revalidatePath("/", "layout");
-
   redirect("/");
 }

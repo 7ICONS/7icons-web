@@ -132,7 +132,7 @@ export default async function SignUpPage({
                 </div>
               )}
 
-              {/* Form */}
+              {/* Email / Password Form */}
               <form
                 action={signUp}
                 className="mt-9 space-y-5"
@@ -237,35 +237,6 @@ export default async function SignUpPage({
                   />
                 </div>
 
-                {/* Terms */}
-                <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-600">
-                  <input
-                    name="terms"
-                    value="accepted"
-                    type="checkbox"
-                    required
-                    className="mt-1 h-4 w-4 shrink-0 rounded border-violet-200 accent-violet-700"
-                  />
-
-                  <span>
-                    I agree to the{" "}
-                    <button
-                      type="button"
-                      className="font-semibold text-violet-700 transition hover:text-violet-900"
-                    >
-                      Terms of Use
-                    </button>{" "}
-                    and{" "}
-                    <button
-                      type="button"
-                      className="font-semibold text-violet-700 transition hover:text-violet-900"
-                    >
-                      Privacy Policy
-                    </button>
-                    .
-                  </span>
-                </label>
-
                 {/* Create Account */}
                 <button
                   type="submit"
@@ -288,6 +259,19 @@ export default async function SignUpPage({
 
               {/* Google */}
               <GoogleAuthButton />
+
+              {/* Legal Agreement */}
+              <p className="mt-5 text-center text-xs leading-5 text-slate-400">
+                By continuing, you agree to our{" "}
+                <span className="font-semibold text-violet-600">
+                  Terms of Use
+                </span>{" "}
+                and{" "}
+                <span className="font-semibold text-violet-600">
+                  Privacy Policy
+                </span>
+                .
+              </p>
 
               {/* Login */}
               <p className="mt-8 text-center text-sm text-slate-500">
