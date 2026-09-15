@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
+
 import BlogContent from "@/components/blog/BlogContent";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import { getPublishedArticles } from "@/lib/articles";
+
+export const metadata: Metadata = {
+  title: "Blog",
+};
 
 export const dynamic = "force-dynamic";
 

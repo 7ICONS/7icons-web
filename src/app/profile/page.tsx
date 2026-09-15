@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -7,6 +8,10 @@ import AccountBadge, {
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Profile",
+};
 
 type ProfilePageProps = {
   searchParams: Promise<{

@@ -1,5 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import {
+  FormEvent,
+  useState,
+} from "react";
+
+import { createClient } from "@/lib/supabase/client";
 
 const exploreLinks = [
   {
@@ -47,6 +55,93 @@ const accountLinks = [
 ];
 
 export default function Footer() {
+  const [email, setEmail] =
+    useState("");
+
+  const [isSubmitting, setIsSubmitting] =
+    useState(false);
+
+  const [message, setMessage] =
+    useState("");
+
+  const [messageType, setMessageType] =
+    useState<
+      "success" | "error" | null
+    >(null);
+
+  async function handleSubscribe(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+
+    const normalizedEmail =
+      email.trim().toLowerCase();
+
+    if (!normalizedEmail) {
+      setMessage(
+        "Please enter your email address.",
+      );
+
+      setMessageType("error");
+
+      return;
+    }
+
+    setIsSubmitting(true);
+    setMessage("");
+    setMessageType(null);
+
+    try {
+      const supabase =
+        createClient();
+
+      const { error } =
+        await supabase.rpc(
+          "subscribe_newsletter",
+          {
+            p_email:
+              normalizedEmail,
+          },
+        );
+
+      if (error) {
+        console.error(
+          "Newsletter subscription error:",
+          error,
+        );
+
+        setMessage(
+          "Unable to subscribe right now. Please try again.",
+        );
+
+        setMessageType("error");
+
+        return;
+      }
+
+      setEmail("");
+
+      setMessage(
+        "You're subscribed! Welcome to the ICONIA newsletter.",
+      );
+
+      setMessageType("success");
+    } catch (error) {
+      console.error(
+        "Newsletter subscription error:",
+        error,
+      );
+
+      setMessage(
+        "Unable to subscribe right now. Please try again.",
+      );
+
+      setMessageType("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <footer className="bg-[#160b2d] text-white">
       {/* Main Footer */}
@@ -71,12 +166,17 @@ export default function Footer() {
             </Link>
 
             <p className="mt-5 max-w-xs text-sm leading-6 text-violet-100/70">
-              A digital home for stories, memories, members, and communities
-              surrounding 7ICONS &amp; ICONIA.
+              A digital home for
+              stories, memories,
+              members, and
+              communities
+              surrounding 7ICONS
+              &amp; ICONIA.
             </p>
 
             <p className="mt-5 text-sm font-medium text-violet-300">
-              Every Voice. One Iconic Story.
+              Every Voice. One
+              Iconic Story.
             </p>
           </div>
 
@@ -87,16 +187,24 @@ export default function Footer() {
             </h3>
 
             <ul className="mt-5 space-y-3">
-              {exploreLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-violet-100/70 transition hover:text-violet-300"
+              {exploreLinks.map(
+                (item) => (
+                  <li
+                    key={item.href}
                   >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+                    <Link
+                      href={
+                        item.href
+                      }
+                      className="text-sm text-violet-100/70 transition hover:text-violet-300"
+                    >
+                      {
+                        item.label
+                      }
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
 
@@ -107,16 +215,24 @@ export default function Footer() {
             </h3>
 
             <ul className="mt-5 space-y-3">
-              {communityLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-violet-100/70 transition hover:text-violet-300"
+              {communityLinks.map(
+                (item) => (
+                  <li
+                    key={item.href}
                   >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+                    <Link
+                      href={
+                        item.href
+                      }
+                      className="text-sm text-violet-100/70 transition hover:text-violet-300"
+                    >
+                      {
+                        item.label
+                      }
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
 
@@ -127,16 +243,24 @@ export default function Footer() {
             </h3>
 
             <ul className="mt-5 space-y-3">
-              {accountLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-violet-100/70 transition hover:text-violet-300"
+              {accountLinks.map(
+                (item) => (
+                  <li
+                    key={item.href}
                   >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+                    <Link
+                      href={
+                        item.href
+                      }
+                      className="text-sm text-violet-100/70 transition hover:text-violet-300"
+                    >
+                      {
+                        item.label
+                      }
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
 
@@ -147,28 +271,93 @@ export default function Footer() {
             </h3>
 
             <p className="mt-5 max-w-sm text-sm leading-6 text-violet-100/70">
-              Get the latest stories and updates from 7ICONS &amp; ICONIA.
+              Get the latest
+              stories, schedules,
+              and updates from
+              7ICONS &amp; ICONIA.
             </p>
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row xl:flex-col 2xl:flex-row">
-              <input
-                type="email"
-                placeholder="Your email address"
-                aria-label="Email address"
-                className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-violet-100/40 transition focus:border-violet-400 focus:bg-white/15"
-              />
+            <form
+              onSubmit={
+                handleSubscribe
+              }
+              className="mt-5"
+            >
+              <div className="flex flex-col gap-3 sm:flex-row xl:flex-col 2xl:flex-row">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(
+                    event,
+                  ) => {
+                    setEmail(
+                      event.target
+                        .value,
+                    );
 
-              <button
-                type="button"
-                className="rounded-xl bg-gradient-to-r from-violet-600 to-purple-500 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-900/30"
-              >
-                Subscribe
-              </button>
-            </div>
+                    if (
+                      messageType ===
+                      "error"
+                    ) {
+                      setMessage(
+                        "",
+                      );
 
-            <p className="mt-3 text-xs leading-5 text-violet-100/40">
-              Newsletter subscription will be available in a future update.
-            </p>
+                      setMessageType(
+                        null,
+                      );
+                    }
+                  }}
+                  required
+                  disabled={
+                    isSubmitting
+                  }
+                  placeholder="Your email address"
+                  aria-label="Email address"
+                  autoComplete="email"
+                  className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-violet-100/40 transition focus:border-violet-400 focus:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60"
+                />
+
+                <button
+                  type="submit"
+                  disabled={
+                    isSubmitting
+                  }
+                  className="rounded-xl bg-gradient-to-r from-violet-600 to-purple-500 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-900/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                >
+                  {isSubmitting
+                    ? "Subscribing..."
+                    : "Subscribe"}
+                </button>
+              </div>
+
+              {message ? (
+                <p
+                  className={`mt-3 text-xs leading-5 ${
+                    messageType ===
+                    "success"
+                      ? "text-emerald-300"
+                      : "text-red-300"
+                  }`}
+                  role={
+                    messageType ===
+                    "error"
+                      ? "alert"
+                      : "status"
+                  }
+                  aria-live="polite"
+                >
+                  {message}
+                </p>
+              ) : (
+                <p className="mt-3 text-xs leading-5 text-violet-100/40">
+                  Join the ICONIA
+                  newsletter and
+                  never miss a new
+                  chapter.
+                </p>
+              )}
+            </form>
           </div>
         </div>
       </div>
@@ -177,7 +366,8 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-5 py-6 text-center text-xs text-violet-100/50 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10">
           <p>
-            © 2026 7ICONS. All rights reserved.
+            © 2026 7ICONS. All
+            rights reserved.
           </p>
 
           <p>

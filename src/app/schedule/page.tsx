@@ -1,12 +1,16 @@
+import type { Metadata } from "next";
+
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-
-import ScheduleHero from "@/components/schedule/ScheduleHero";
+import PastEvents from "@/components/schedule/PastEvents";
 import ScheduleCalendar from "@/components/schedule/ScheduleCalendar";
 import ScheduleEvents from "@/components/schedule/ScheduleEvents";
-import PastEvents from "@/components/schedule/PastEvents";
-
+import ScheduleHero from "@/components/schedule/ScheduleHero";
 import { getPublishedScheduleEvents } from "@/lib/schedule";
+
+export const metadata: Metadata = {
+  title: "Schedule",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -19,11 +23,8 @@ export default async function SchedulePage() {
 
       <main>
         <ScheduleHero />
-
         <ScheduleCalendar events={events} />
-
         <ScheduleEvents events={events} />
-
         <PastEvents events={events} />
       </main>
 

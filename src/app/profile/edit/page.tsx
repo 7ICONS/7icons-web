@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -8,6 +9,10 @@ import ProfileBackgroundUploader from "@/components/profile/ProfileBackgroundUpl
 import { createClient } from "@/lib/supabase/server";
 
 import { updateProfile } from "./actions";
+
+export const metadata: Metadata = {
+  title: "Edit Profile",
+};
 
 type EditProfilePageProps = {
   searchParams: Promise<{
