@@ -22,9 +22,9 @@
 
 ---
 
-## 🌐 Live Demo
+## 🌐 Live Website
 
-The latest production version is available on Vercel:
+The production version is available on Vercel:
 
 **https://7icons-web.vercel.app**
 
@@ -32,32 +32,53 @@ The latest production version is available on Vercel:
 
 ## 💜 About the Project
 
-**7ICONS Web** is a community-driven digital home created to bring
-together stories, memories, member profiles, schedules, articles,
-community activities, and other moments connected to the journey of
-7ICONS and ICONIA.
+**7ICONS Web** is the public-facing website of the 7ICONS digital ecosystem.
 
-The project is designed as a growing digital archive where memories
-from the past, activities from the present, and future chapters can
-remain connected in one place.
+It brings together stories, member profiles, schedules, galleries, community
+activity, fan representatives, and account features in one place while keeping
+the experience centered around 7ICONS and ICONIA.
+
+The project is designed as a growing digital archive where memories from the
+past, activities from the present, and future chapters can remain connected.
 
 > **7ICONS creates the memories.**  
 > **ICONIA helps keep them alive.**
 
-This website does not replace official 7ICONS platforms.
+This digital home exists between those two sides — preserving the journey while
+helping the community stay connected to every chapter.
 
-It exists as a community-driven digital space built with appreciation
-for 7ICONS and the ICONIA community.
+This website does not replace official 7ICONS platforms. It exists as a
+community-driven digital space built with appreciation for 7ICONS and the
+ICONIA community.
 
 ---
 
-# ✨ Current Features
+# 🚀 Current Release
+
+## V1.1 — Live
+
+The public website has completed its main V1 foundation and is currently live.
+
+V1.1 adds additional polish and community-facing improvements on top of the
+original V1 release, including:
+
+- Per-page browser titles
+- Branded global loading screen
+- `Loading... | 7ICONS` browser-tab loading state
+- Active newsletter subscription
+- Profile and Edit Profile browser metadata
+- Refined sign-up consent flow
+- Improved Google OAuth username onboarding
+
+---
+
+# ✨ Main Features
 
 ## 🏠 Homepage
 
-The main entry point of the 7ICONS digital home.
+The Homepage acts as the central gateway to the main areas of the website.
 
-Current Homepage sections include:
+Current sections include:
 
 - Hero
 - Featured Articles
@@ -68,16 +89,14 @@ Current Homepage sections include:
 - ICONIA Across Indonesia
 - Responsive navigation
 - Footer
-
-The Homepage acts as the central gateway to the main areas of the
-website.
+- Newsletter subscription
 
 ---
 
 ## 📰 Blog & Stories
 
-A dedicated space for stories, updates, community moments, and
-memorable chapters from the journey.
+A dedicated space for stories, updates, community moments, and memorable
+chapters from the journey.
 
 ### Features
 
@@ -91,7 +110,7 @@ memorable chapters from the journey.
 - Individual article content
 - Responsive article detail layout
 
-### Current Categories
+### Categories
 
 - News
 - Story
@@ -99,16 +118,10 @@ memorable chapters from the journey.
 - Community
 - Member Spotlight
 
-Dynamic article routes:
+Dynamic article route:
 
 ```text
 /blog/[slug]
-```
-
-Example:
-
-```text
-/blog/the-beginning-of-our-journey
 ```
 
 ---
@@ -117,52 +130,48 @@ Example:
 
 A digital archive for current and former members of 7ICONS.
 
-### Current Structure
-
-```text
-Current Members
-├── Member 01
-├── Member 02
-├── Member 03
-├── Member 04
-├── Member 05
-└── Member 06
-
-Former Members
-├── Former Member 01
-├── Former Member 02
-└── Former Member 03
-```
-
 ### Features
 
 - Members Hero
-- Current Members section
-- Former Members section
+- Current Members
+- Former Members
 - Responsive member grid
 - Individual member portraits
-- Dynamic profile pages
+- Dynamic member profile pages
 - Profile Story
 - About
 - Personality
 - Memorable Moments
 - Member journey information
 
-Dynamic member routes:
+Dynamic member route:
 
 ```text
 /members/[slug]
 ```
 
-Example:
+Some profile information may still use development or placeholder content until
+verified information is available.
+
+---
+
+## 🖼 Gallery
+
+The Gallery provides a visual archive for 7ICONS and ICONIA moments.
+
+### Features
+
+- Public gallery browsing
+- Album-based content
+- Responsive gallery experience
+- Community comment integration
+- Direct linking to gallery discussions
+
+Main route:
 
 ```text
-/members/member-01
+/gallery
 ```
-
-The current member information is still development/demo data and can
-later be replaced with verified information without changing the page
-architecture.
 
 ---
 
@@ -170,20 +179,16 @@ architecture.
 
 A dynamic scheduling system for 7ICONS activities.
 
-The Schedule system is connected both to the Homepage and the dedicated
-Full Schedule page.
+The Schedule system is connected to both the Homepage and the dedicated Schedule
+page.
 
 ### Homepage Schedule
 
-Includes:
-
-- Current month
-- Current year
+- Current month and year
 - Automatic calendar generation
 - Today indicator
 - Event indicators
-- Previous month navigation
-- Next month navigation
+- Previous / next month navigation
 - Automatic year changes
 - Upcoming Events
 - Link to Full Schedule
@@ -219,19 +224,11 @@ Features:
 - TV
 - Other
 
-Dynamic event routes:
+Dynamic event route:
 
 ```text
 /schedule/[slug]
 ```
-
-Example:
-
-```text
-/schedule/7icons-live-performance
-```
-
-### Automatic Event Status
 
 Event status is determined automatically from its date.
 
@@ -243,62 +240,32 @@ Past Date
 → Completed
 ```
 
-This means event status does not need to be changed manually.
-
 ---
 
 ## 💜 Fan Representatives
 
-A dedicated community section for ICONIA representatives from different
-regions across Indonesia.
+A dedicated community section for ICONIA representatives from different regions
+across Indonesia.
 
-### Main Page
-
-Features:
+### Features
 
 - Fan Representatives Hero
 - Representative Grid
 - Region labels
 - City information
 - Representative portraits
-- More Regions Coming Soon
 - Our Role
 - Community CTA
 - Responsive layout
+- Individual representative profiles
 
-### Current Development Representatives
-
-The current development version contains 9 dummy representatives:
-
-```text
-DKI Jakarta
-Jawa Barat
-Jawa Tengah
-Jawa Timur
-Bali
-Sumatera Utara
-Sulawesi Selatan
-Kalimantan Timur
-DI Yogyakarta
-```
-
-These are placeholder profiles created to develop and test the website
-architecture.
-
-The system can later support additional regions without rebuilding the
-page.
-
-### Representative Profiles
-
-Each representative has an individual dynamic profile.
-
-Dynamic routes:
+Dynamic representative route:
 
 ```text
 /fan-representatives/[slug]
 ```
 
-Representative profiles currently support:
+Representative profiles can include:
 
 - Portrait
 - Name
@@ -316,18 +283,15 @@ Representative profiles currently support:
 - Supporting ICONIA
 - Representative Story
 
-Instagram usernames and WhatsApp numbers currently used in development
-are dummy data.
-
-They can later be replaced with verified representative contact
-information.
+Some representative and contact information may remain placeholder data until
+verified community information is available.
 
 ---
 
 ## 📖 About
 
-The About page explains the purpose, philosophy, and development
-journey behind the 7ICONS digital home.
+The About page explains the purpose, philosophy, and development journey behind
+the 7ICONS digital home.
 
 Available at:
 
@@ -348,88 +312,126 @@ Available at:
 
 ### The Connection
 
-One of the core messages of this digital home:
-
 > **7ICONS creates the memories.**  
 > **ICONIA helps keep them alive.**
 
-This digital home exists between those two sides — preserving the
-journey while helping the community stay connected to every chapter.
+This digital home exists between those two sides — preserving the journey while
+helping the community stay connected to every chapter.
 
 ---
 
-## 🔐 Account UI
+# 🔐 Accounts & Authentication
 
-The first visual foundation for the future account system has been
-created.
+The website includes a working account system backed by Supabase.
 
-### Current Pages
+### Main Routes
 
 ```text
 /login
 /signup
 /forgot-password
+/profile
+/profile/edit
+/onboarding/username
 ```
 
-### Login UI
+### Current Account Features
 
-Includes:
-
-- Email Address
-- Password
-- Remember Me
-- Forgot Password
-- Sign In
-- Google sign-in placeholder
-- Link to Sign Up
-
-### Sign Up UI
-
-Includes:
-
-- Full Name
+- Email/password authentication
+- Google OAuth
+- Google username onboarding
+- Account profile
+- Full name
 - Username
-- Email Address
-- Password
-- Confirm Password
-- Terms checkbox
-- Create Account
-- Google sign-up placeholder
-- Link to Login
+- Bio
+- Avatar
+- Profile background
+- Profile background positioning
+- Account badges
+- Email verification status display
+- Recent community activity
+- Comment bookmarks
+- Profile editing
+- Account-aware navigation
 
-### Forgot Password UI
-
-Includes:
-
-- Email Address
-- Send Reset Instructions
-- Account recovery information
-- Back to Sign In
-
-### Current Status
-
-The account system is currently:
-
-```text
-UI Only
-```
-
-The following are **not active yet**:
-
-- Authentication backend
-- User database
-- Sessions
-- Google authentication
-- Password reset email
-- Account verification
-- Real account creation
-
-These pages currently serve as the frontend foundation for the future
-authentication system.
+Google users who do not yet have a username are automatically directed through
+the username onboarding flow before entering the main website experience.
 
 ---
 
-## 🔎 Global Search
+# 💬 Community Features
+
+Community interaction is integrated into the public website.
+
+Current functionality includes:
+
+- Authenticated commenting
+- Replies
+- Article discussions
+- Gallery discussions
+- Comment activity history
+- Comment bookmarks
+- Account badges
+- Community notifications
+- Community guidelines
+- Moderation-aware comment states
+
+Community-related routes include:
+
+```text
+/community
+/guidelines
+```
+
+---
+
+# 🔔 Notifications
+
+The account experience includes community notification support so users can stay
+aware of relevant activity connected to their participation.
+
+Notifications are integrated with the wider account and community system shared
+across the 7ICONS ecosystem backend.
+
+---
+
+# 📬 Newsletter
+
+The **Stay Connected** section in the Footer is active.
+
+Visitors can subscribe using their email address.
+
+Subscription flow:
+
+```text
+Visitor
+   ↓
+Footer Newsletter Form
+   ↓
+Supabase RPC
+   ↓
+newsletter_subscribers
+   ↓
+Active Subscriber
+```
+
+Current newsletter functionality includes:
+
+- Email validation
+- Normalized email storage
+- Duplicate prevention
+- Active subscriber status
+- Re-subscription support
+- Success / error feedback
+- Supabase-backed subscriber storage
+
+Newsletter campaign delivery is planned as a future enhancement.
+
+The current release focuses on securely collecting opt-in subscribers.
+
+---
+
+# 🔎 Global Search
 
 A data-driven global search system is available at:
 
@@ -437,7 +439,7 @@ A data-driven global search system is available at:
 /search
 ```
 
-Global Search currently searches across:
+Global Search can surface content across major public website areas, including:
 
 - Blog Articles
 - Members
@@ -449,34 +451,49 @@ Global Search currently searches across:
 - Event Categories
 - Event Locations
 
-### Example Queries
+Search results link directly to the appropriate destination.
+
+---
+
+# ⚡ Navigation & Loading Experience
+
+V1.1 introduces additional browser and navigation polish.
+
+## Page Titles
+
+Main pages use consistent browser-tab titles.
+
+Examples:
 
 ```text
-Aulia
-Jakarta
-Journey
-ICONIA
-Performance
+7ICONS | Official Digital Home
+7ICONS | Blog
+7ICONS | Members
+7ICONS | Gallery
+7ICONS | Fan Representatives
+7ICONS | About
+7ICONS | Schedule
+7ICONS | Profile
+7ICONS | Edit Profile
 ```
 
-Search results automatically link to the appropriate detail page.
+## Global Loading Screen
 
-For example:
+Next.js route loading uses a branded 7ICONS loading screen with:
+
+- 7ICONS logo
+- Animated loading dots
+- ICONIA Digital Home branding
+- Matching violet visual identity
+
+During the loading state, the browser tab displays:
 
 ```text
-Aulia Rahma
-→ /fan-representatives/aulia-rahma-jakarta
+Loading... | 7ICONS
 ```
 
-or:
-
-```text
-7ICONS Live Performance
-→ /schedule/7icons-live-performance
-```
-
-The Global Search is connected directly to the Search icon in the
-navigation bar.
+After navigation completes, the browser automatically switches to the title of
+the destination page.
 
 ---
 
@@ -491,6 +508,8 @@ navigation bar.
 ├── /members
 │   └── /members/[slug]
 │
+├── /gallery
+│
 ├── /schedule
 │   └── /schedule/[slug]
 │
@@ -501,11 +520,20 @@ navigation bar.
 │
 ├── /search
 │
+├── /community
+│
+├── /guidelines
+│
 ├── /login
 │
 ├── /signup
 │
-└── /forgot-password
+├── /forgot-password
+│
+├── /profile
+│   └── /profile/edit
+│
+└── /onboarding/username
 ```
 
 ---
@@ -520,87 +548,21 @@ The project currently uses:
 - **Tailwind CSS**
 - **Next.js App Router**
 - **React Compiler**
+- **Supabase**
 - **GitHub**
 - **Vercel**
 
----
+Supabase provides the shared backend foundation for:
 
-# 📁 Project Structure
-
-```text
-7icons-web/
-│
-├── public/
-│   │
-│   ├── brand/
-│   │   ├── 7icons-logo-v2.png
-│   │   └── 7Icons Iconic Story Banner.png
-│   │
-│   ├── blog/
-│   │
-│   ├── members/
-│   │
-│   └── fan-representatives/
-│
-├── src/
-│   │
-│   ├── app/
-│   │   │
-│   │   ├── about/
-│   │   │
-│   │   ├── blog/
-│   │   │   └── [slug]/
-│   │   │
-│   │   ├── fan-representatives/
-│   │   │   └── [slug]/
-│   │   │
-│   │   ├── forgot-password/
-│   │   │
-│   │   ├── login/
-│   │   │
-│   │   ├── members/
-│   │   │   └── [slug]/
-│   │   │
-│   │   ├── schedule/
-│   │   │   └── [slug]/
-│   │   │
-│   │   ├── search/
-│   │   │
-│   │   ├── signup/
-│   │   │
-│   │   ├── globals.css
-│   │   ├── icon.png
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   │
-│   ├── components/
-│   │   │
-│   │   ├── about/
-│   │   ├── blog/
-│   │   ├── fan-representatives/
-│   │   ├── home/
-│   │   ├── layout/
-│   │   ├── members/
-│   │   ├── schedule/
-│   │   └── search/
-│   │
-│   └── data/
-│       ├── blogArticles.ts
-│       ├── fanRepresentatives.ts
-│       ├── members.ts
-│       └── schedule.ts
-│
-├── .gitignore
-├── AGENTS.md
-├── CLAUDE.md
-├── eslint.config.mjs
-├── next.config.ts
-├── package-lock.json
-├── package.json
-├── postcss.config.mjs
-├── README.md
-└── tsconfig.json
-```
+- Authentication
+- User profiles
+- Account badges
+- Community interaction
+- Comments and replies
+- Bookmarks
+- Notifications
+- Newsletter subscribers
+- Shared ecosystem data
 
 ---
 
@@ -636,6 +598,9 @@ Open:
 http://localhost:3000
 ```
 
+Backend-dependent features require the appropriate Supabase environment
+variables to be configured locally.
+
 ---
 
 # 🏗 Production Build
@@ -646,8 +611,8 @@ Before pushing major updates, run:
 npm run build
 ```
 
-A successful production build confirms that the application can be
-compiled correctly before deployment.
+A successful production build confirms that the application can be compiled
+correctly before deployment.
 
 ---
 
@@ -687,87 +652,134 @@ Production
 
 ---
 
-# 🧪 Development Data
+# 🧩 7ICONS Ecosystem
 
-Several areas of the website currently use dummy or placeholder
-information while the architecture and interface continue to be
-developed.
+`7icons-web` is the public-facing application of the wider 7ICONS ecosystem.
 
-This currently includes parts of:
+```text
+7icons-web
+→ Public website and community experience
 
-- Member information
+7icons-admin
+→ Administrative and content management tools
+
+7icons-apply
+→ Fan Representative application experience
+```
+
+The three applications share the same overall vision:
+
+```text
+7ICONS
+   ↓
+Digital Archive
+   ↓
+Community
+   ↓
+ICONIA
+```
+
+---
+
+# 🧪 Content & Development Data
+
+The application architecture and core functionality are live, but some public
+content can still use development or placeholder information until verified
+content becomes available.
+
+This may include parts of:
+
 - Member biographies
-- Fan Representative information
+- Fan Representative profiles
 - Instagram accounts
 - WhatsApp contacts
 - Schedule information
 - Event information
 - Blog content
 
-These values can later be replaced with verified information without
-rebuilding the underlying page structure.
+These values can be replaced without rebuilding the underlying page
+architecture.
 
 ---
 
 # ✅ Development Status
 
 ```text
-Homepage                       ✅
-Responsive Navigation          ✅
-Blog                           ✅
-Blog Search & Filter           ✅
-Article Detail                 ✅
-Members                        ✅
-Current Member Profiles        ✅
-Former Member Profiles         ✅
-Homepage Schedule              ✅
-Full Schedule                  ✅
-Schedule Filter                ✅
-Schedule History               ✅
-Event Detail                   ✅
-Fan Representatives            ✅
-Representative Profiles        ✅
-Instagram / WhatsApp UI        ✅
-About                          ✅
-Login UI                       ✅
-Sign Up UI                     ✅
-Forgot Password UI             ✅
-Global Search                  ✅
-Vercel Deployment              ✅
+Core Public Website                 ✅
+Responsive Navigation               ✅
 
-Authentication Backend         ⏳
-User Account Database          ⏳
-User Profile                   ⏳
-Comment System                 ⏳
-Account Activity / History     ⏳
+Homepage                            ✅
+
+Blog                                ✅
+Blog Search & Filter                ✅
+Article Detail                      ✅
+
+Members                             ✅
+Current Member Profiles             ✅
+Former Member Profiles              ✅
+
+Gallery                             ✅
+
+Homepage Schedule                   ✅
+Full Schedule                       ✅
+Schedule Filter                     ✅
+Schedule History                    ✅
+Event Detail                        ✅
+
+Fan Representatives                 ✅
+Representative Profiles             ✅
+
+About                               ✅
+Global Search                       ✅
+
+Authentication Backend              ✅
+Email / Password Authentication     ✅
+Google OAuth                        ✅
+Google Username Onboarding          ✅
+
+User Profile                        ✅
+Profile Editing                     ✅
+Avatar                              ✅
+Profile Background                  ✅
+Account Badges                      ✅
+
+Comment System                      ✅
+Replies                             ✅
+Comment Activity                    ✅
+Comment Bookmarks                   ✅
+Community Notifications             ✅
+Community Guidelines                ✅
+
+Newsletter Subscription             ✅
+
+Per-page Browser Titles             ✅
+Global Loading Screen               ✅
+Loading Browser Title               ✅
+
+Supabase Integration                ✅
+Vercel Deployment                   ✅
+Production Website                  ✅
 ```
 
 ---
 
 # 🔮 Planned Development
 
-Future versions may include:
+Future updates may include:
 
-- Real authentication
-- User account database
-- Google authentication
-- Email verification
-- Password recovery backend
-- User profiles
-- Profile avatars
-- Comment system
-- Comment history
-- User activity history
-- Saved articles
-- Saved events
-- Personalized account features
-- Expanded Fan Representatives
-- Verified community contacts
-- Expanded schedule information
-- More blog content
+- Newsletter campaign delivery
+- Newsletter unsubscribe flow
+- Newsletter subscriber management
+- Expanded verified member information
+- Expanded Fan Representative coverage
+- Verified representative contacts
+- More schedule data
+- More blog and archive content
+- Additional community tools
 - Search improvements
-- Content management tools
-- Community-oriented features
+- Further account personalization
+- Additional notification improvements
+- Continued accessibility and UX polish
 
 ---
 
